@@ -1,0 +1,8 @@
+{
+  "name": "Jafa api",
+  "description": "'Result-array' means the method returns an array of items containing the data displayed below",
+  "template": {
+    "withCompare": false,
+    "withGenerator": true
+  }
+}
