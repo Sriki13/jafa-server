@@ -7,7 +7,18 @@ function logs(val) {
 }
 
 async function fetchAllFoods() {
-    return await Food.find();
+    let foods = await Food.find();
+    let result = [];
+    foods.forEach(food => {
+        let name = food.getName();
+        if (name !== undefined && name !== "") {
+            result.push({
+                name: food.getName(),
+                ingredients: food.ingredients
+            })
+        }
+    });
+    return result;
 }
 
 async function addFood(id) {
