@@ -2,7 +2,6 @@ const http = require('http');
 const co = require('co');
 const express = require('express');
 const mongoose = require('mongoose');
-const credentials = require("./credentials");
 
 const {configure} = require('./config/express');
 
@@ -26,13 +25,15 @@ async function start() {
     console.log(`✔ Server running on port ${port}`);
 
     let host = "ds159624.mlab.com";
+    let credentials = {};
 
     if (process.env.JAFA_DB_USER !== undefined) {
-        credentials.user = process.env.JAFA_DB_USER;
-    }
-    if (process.env.JAFA_DB_PASSWORD !== undefined) {
         credentials.password = process.env.JAFA_DB_PASSWORD;
+        credentials.user = process.env.JAFA_DB_USER;
+    } else {
+        credentials = require("./credentials");
     }
+
     mongoose.connect("mongodb://" + credentials.user + ":" + credentials.password + "@" + host + ":59624/jafa");
 
     const db = mongoose.connection;
