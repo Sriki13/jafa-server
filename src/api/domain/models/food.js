@@ -15,7 +15,7 @@ foodSchema.methods.getName = function () {
     } else return this.product_name_vi;
 };
 
-const Food = mongoose.model('Food', foodSchema, "vietnam");
+const Food = mongoose.model('Food', foodSchema, "france");
 
 module.exports = {
     Food,

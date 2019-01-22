@@ -6,8 +6,10 @@ function logs(val) {
     logging = val;
 }
 
-async function fetchAllFoods() {
-    let foods = await Food.find();
+async function fetchFood(name) {
+    let foods = await Food.find({
+        "product_name": "/" + name + "/"
+    });
     let result = [];
     foods.forEach(food => {
         let name = food.getName();
@@ -47,7 +49,7 @@ async function addFood(id) {
 
 
 module.exports = {
-    fetchAllFoods,
+    fetchFood,
     addFood,
     logs
 };
