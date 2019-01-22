@@ -13,6 +13,7 @@ async function fetchFood(name) {
     let result = [];
     foods.forEach(food => {
         result.push({
+            id: food.id,
             name: food.product_name,
             ingredients: food.ingredients
         })
