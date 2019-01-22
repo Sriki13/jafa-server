@@ -19,8 +19,8 @@ const HttpStatus = require("http-status-codes");
 
 async function searchFood(req, res) {
     let search = "";
-    if (req.params.name !== undefined) {
-        search = req.params.name;
+    if (req.query.name !== undefined) {
+        search = req.query.name;
     }
     let items = await controller.fetchFood(search);
     return res.status(HttpStatus.OK).send(items);

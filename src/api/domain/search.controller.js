@@ -8,17 +8,14 @@ function logs(val) {
 
 async function fetchFood(name) {
     let foods = await Food.find({
-        "product_name": "/" + name + "/"
-    });
+        product_name: {'$regex': name, '$options': 'i'}
+    }).limit(10);
     let result = [];
     foods.forEach(food => {
-        let name = food.getName();
-        if (name !== undefined && name !== "") {
-            result.push({
-                name: food.getName(),
-                ingredients: food.ingredients
-            })
-        }
+        result.push({
+            name: food.product_name,
+            ingredients: food.ingredients
+        })
     });
     return result;
 }
