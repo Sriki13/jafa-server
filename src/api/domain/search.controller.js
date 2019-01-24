@@ -9,7 +9,7 @@ function logs(val) {
 async function fetchFood(name) {
     let foods = await Food.find({
         product_name: {'$regex': name, '$options': 'i'}
-    }).limit(10);
+    }).limit(20);
     let result = [];
     foods.forEach(food => {
         result.push({

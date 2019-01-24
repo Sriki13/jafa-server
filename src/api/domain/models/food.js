@@ -34,7 +34,37 @@ const foodSchema = new mongoose.Schema({
     nutriments: Object,
     with_sweeteners: Number, // 1 if true
     comments: Array,
+    scores: Array
 });
+
+function checkArrayDefined(item) {
+    return item !== undefined && item !== [];
+}
+
+foodSchema.methods.assignInitialScore = () => {
+    if (this.product_name === undefined) {
+        this.scores = [0];
+        return;
+    }
+    let base = 0;
+    if (checkArrayDefined(this.ingredients)) {
+        base += 2;
+    }
+    for (let str in ["states_tags", "categories_tags", "allergens_tags", "additives_tags", "vitamin_tags"]) {
+        if (checkArrayDefined(this[str])) {
+            base += 1;
+        }
+    }
+    if (this.quantity !== undefined) {
+        base += 1;
+    }
+    if (this.nutriments !== undefined && this.nutriments !== {}) {
+        base += 1;
+    }
+    base += Math.random();
+    this.scores = [base];
+};
+
 
 const Food = mongoose.model('Food', foodSchema, "france");
 
