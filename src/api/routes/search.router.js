@@ -31,7 +31,17 @@ async function createFood(req, res) {
     return res.status(HttpStatus.OK).send();
 }
 
+async function updateFood(req, res) {
+    try {
+        let updatedFood = await controller.updateFood(req.body)
+        return res.status(HttpStatus.OK).send(updatedFood)
+    } catch (err) {
+        return res.status(HttpStatus.BAD_REQUEST).send()
+    }
+}
+
 module.exports = {
     searchFood,
-    createFood
+    createFood,
+    updateFood,
 };
