@@ -33,6 +33,7 @@ const foodSchema = new mongoose.Schema({
 
     nutriments: Object,
     with_sweeteners: Number, // 1 if true
+    comments: Array,
 });
 
 const Food = mongoose.model('Food', foodSchema, "france");
