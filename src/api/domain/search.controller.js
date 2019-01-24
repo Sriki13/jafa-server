@@ -26,6 +26,13 @@ async function addFood(id) {
     await newItem.save();
 }
 
+async function updateFood(food) {
+    if (!food.hasOwnProperty('id')) {
+        throw "Food object must have 'id' attribute" 
+    }
+    return await Food.findOneAndUpdate({id: food.id}, {$set: food}, {new: true})
+}
+
 /**
  * KEPT AS EXAMPLE, DELETE LATER
  *
@@ -49,5 +56,6 @@ async function addFood(id) {
 module.exports = {
     fetchFood,
     addFood,
+    updateFood,
     logs
 };
