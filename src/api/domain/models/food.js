@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const foodSchema = new mongoose.Schema({
-    id: String,
+    _id: String,
     product_name: String,
     ingredients: [{
         text: String, id: String, rank: Number
@@ -33,17 +33,22 @@ const foodSchema = new mongoose.Schema({
 
     nutriments: Object,
     with_sweeteners: Number, // 1 if true
+
+    scores: [Number],
     comments: Array,
-    scores: Array
 });
+
 
 function checkArrayDefined(item) {
     return item !== undefined && item !== [];
 }
 
-foodSchema.methods.assignInitialScore = () => {
+foodSchema.methods.assignInitialScore = function () {
+    console.log("Assigning new score");
     if (this.product_name === undefined) {
-        this.scores = [0];
+        let result = [];
+        result.push(0);
+        this.scores = result;
         return;
     }
     let base = 0;
@@ -62,12 +67,13 @@ foodSchema.methods.assignInitialScore = () => {
         base += 1;
     }
     base += Math.random();
-    this.scores = [base];
+    let result = [];
+    result.push(base);
+    this.scores = result;
 };
-
 
 const Food = mongoose.model('Food', foodSchema, "france");
 
 module.exports = {
-    Food,
+    Food
 };
