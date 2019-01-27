@@ -27,7 +27,7 @@ async function addFood(id) {
 }
 
 async function updateFood(food) {
-    if (!food.hasOwnProperty('id')) {
+    if ('undefined' === typeof(food['id'])) {
         throw "Food object must have 'id' attribute" 
     }
     return await Food.findOneAndUpdate({id: food.id}, {$set: food}, {new: true})
