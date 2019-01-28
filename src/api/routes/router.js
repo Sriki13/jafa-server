@@ -1,20 +1,24 @@
 const express       = require("express");
 const searchRouter  = require("./search.router");
 const scoreRouter   = require("./score.router");
-const commentRouter = require("./comment.router"); 
+const commentRouter = require("./comment.router");
+const recipeRouter = require("./recipe.router");
 const userRouter    = require("./user.router");
 
 const router = express.Router();
 
 router.get("/foods", searchRouter.searchFood);
-router.post("/foods/:id", searchRouter.createFood);
 router.put("/foods", searchRouter.updateFood);
+router.put("/recipes", searchRouter.searchRecipe);
 
 
 router.get("/foods/:id/score", scoreRouter.fetchScore);
 router.post("/foods/:id/score", scoreRouter.createScore);
 
 router.post('/foods/:id/comment', commentRouter.addComment);
+
+router.post("/recipes", recipeRouter.createRecipe);
+router.post("/recipes/:id/ingredients", recipeRouter.setRecipeIngredient);
 
 
 // Users routes

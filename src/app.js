@@ -25,16 +25,19 @@ async function start() {
     console.log(`✔ Server running on port ${port}`);
 
     let host = "ds159624.mlab.com";
-    let credentials = {};
+    let credentials = "";
+    let mongoPort = "59624";
+    let mongoName = "jafa";
 
     if (process.env.JAFA_DB_USER !== undefined) {
-        credentials.password = process.env.JAFA_DB_PASSWORD;
-        credentials.user = process.env.JAFA_DB_USER;
+        credentials = process.env.JAFA_DB_USER + ":" + process.env.JAFA_DB_PASSWORD + "@";
     } else {
-        credentials = require("./credentials");
+        mongoPort = "27017";
+        mongoName = "off";
+        host = "localhost";
     }
 
-    mongoose.connect("mongodb://" + credentials.user + ":" + credentials.password + "@" + host + ":59624/jafa");
+    mongoose.connect("mongodb://" + credentials + host + ":" + mongoPort + "/" + mongoName);
 
     const db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));

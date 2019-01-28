@@ -1,6 +1,5 @@
 const controller = require("../domain/comment.controller");
 const HttpStatus = require("http-status-codes");
-const Exceptions = require("../domain/exceptions");
 
 async function addComment(req, res) {
     if (req.body.message === undefined) {

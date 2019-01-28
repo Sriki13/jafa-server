@@ -1,4 +1,5 @@
 const Food = require("./models/food").Food;
+const Recipe = require("./models/recipe").Recipe;
 
 let logging = true;
 
@@ -12,25 +13,34 @@ async function fetchFood(name) {
     }).limit(20);
     let result = [];
     foods.forEach(food => {
-        result.push({
-            id: food.id,
-            name: food.product_name,
-            ingredients: food.ingredients
-        })
+        if (food.product_name !== undefined && food.product_name.length !== 0) {
+            result.push({
+                id: food.id,
+                name: food.product_name,
+                ingredients: food.ingredients,
+                images: food.getImagesData()
+            });
+        }
     });
     return result;
 }
 
-async function addFood(id) {
-    const newItem = new Food({id: id});
-    await newItem.save();
-}
-
 async function updateFood(food) {
     if ('undefined' === typeof(food['id'])) {
-        throw "Food object must have 'id' attribute" 
+        throw "Food object must have 'id' attribute"
     }
     return await Food.findOneAndUpdate({id: food.id}, {$set: food}, {new: true})
+}
+
+async function fetchRecipe(name) {
+    let recipes = await Recipe.find({
+        name: {'$regex': name, '$options': 'i'}
+    }).limit(20);
+    let result = [];
+    recipes.forEach(recipe => {
+        result.push(recipe)
+    });
+    return result;
 }
 
 /**
@@ -55,7 +65,7 @@ async function updateFood(food) {
 
 module.exports = {
     fetchFood,
-    addFood,
     updateFood,
+    fetchRecipe,
     logs
 };

@@ -26,22 +26,27 @@ async function searchFood(req, res) {
     return res.status(HttpStatus.OK).send(items);
 }
 
-async function createFood(req, res) {
-    await controller.addFood(req.params.id);
-    return res.status(HttpStatus.OK).send();
-}
-
 async function updateFood(req, res) {
     try {
-        let updatedFood = await controller.updateFood(req.body)
+        let updatedFood = await controller.updateFood(req.body);
         return res.status(HttpStatus.OK).send(updatedFood)
     } catch (err) {
         return res.status(HttpStatus.BAD_REQUEST).send()
     }
 }
 
+async function searchRecipe(req, res) {
+    // TODO: order by latest date by default
+    let search = "";
+    if (req.query.name !== undefined) {
+        search = req.query.name;
+    }
+    let items = await controller.fetchRecipe(search);
+    return res.status(HttpStatus.OK).send(items);
+}
+
 module.exports = {
     searchFood,
-    createFood,
     updateFood,
+    searchRecipe
 };

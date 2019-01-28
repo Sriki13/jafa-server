@@ -8,7 +8,9 @@ const foodSchema = new mongoose.Schema({
         text: String, id: String, rank: Number
     }],
 
-    manufacturing_places_tags: Array,
+    images: Object,
+
+    manufacturing_places_tags: [String],
     packaging: String,
     brands: String,
 
@@ -19,18 +21,18 @@ const foodSchema = new mongoose.Schema({
     product_quantity: String,
     serving_quantity: Number,
 
-    states_tags: Array,
-    categories_tags: Array,
-    allergens_tags: Array,
-    traces_tags: Array,
-    quality_tags: Array,
-    vitamin_tags: Array,
-    additives_tags: String,
-    nutrient_levels_tags: Array,
+    states_tags: [String],
+    categories_tags: [String],
+    allergens_tags: [String],
+    traces_tags: [String],
+    quality_tags: [String],
+    vitamin_tags: [String],
+    additives_tags: [String],
+    nutrient_levels_tags: [String],
 
-    nutrition_grades_tags: Array,
-    nutrition_data_prepared_per: String,
-    nutrition_data_per: String,
+    nutrition_grades_tags: [String],
+    nutrition_data_prepared_per: [String],
+    nutrition_data_per: [String],
 
     nutriments: Object,
     with_sweeteners: Number, // 1 if true
@@ -58,7 +60,7 @@ foodSchema.methods.assignInitialScore = function () {
     if (checkArrayDefined(this.ingredients)) {
         base += 2;
     }
-    for (let str in ["states_tags", "categories_tags", "allergens_tags", "additives_tags", "vitamin_tags"]) {
+    for (let str in ["states_tags", "categories_tags"]) {
         if (checkArrayDefined(this[str])) {
             base += 1;
         }
@@ -69,10 +71,23 @@ foodSchema.methods.assignInitialScore = function () {
     if (this.nutriments !== undefined && this.nutriments !== {}) {
         base += 1;
     }
-    base += Math.random();
+    base += Math.random() * 4;
     let result = [];
     result.push(base);
     this.scores = result;
+};
+
+foodSchema.methods.getImagesData = function () {
+    let result = [];
+    for (let prop in this.images) {
+        if (isNaN(prop)) {
+            result.push({
+                name: prop,
+                rev: this.images[prop].rev
+            });
+        }
+    }
+    return result;
 };
 
 const Food = mongoose.model('Food', foodSchema, "france");
