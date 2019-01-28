@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const foodSchema = new mongoose.Schema({
     _id: String,
@@ -35,7 +36,9 @@ const foodSchema = new mongoose.Schema({
     with_sweeteners: Number, // 1 if true
 
     scores: [Number],
-    comments: Array,
+    comments: [{
+        id: ObjectId, author: String, message: String
+    }]
 });
 
 
