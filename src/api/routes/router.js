@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get("/foods", searchRouter.searchFood);
 router.put("/foods", searchRouter.updateFood);
-router.put("/recipes", searchRouter.searchRecipe);
+router.get("/recipes", searchRouter.searchRecipe);
 
 
 router.get("/foods/:id/score", scoreRouter.fetchScore);

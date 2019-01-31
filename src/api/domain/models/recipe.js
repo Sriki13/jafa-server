@@ -6,14 +6,16 @@ const recipeSchema = new mongoose.Schema({
     title: String,
     text: String,
     authorId: ObjectId,
-    ingredients: [{
+    ingredients: [new mongoose.Schema({
         name: String,
         quantity: Number,
         unit: String,
         foodId: ObjectId
-    }],
+    }, {_id: false})],
     date: Date,
-    comments: [String] // TODO: use comment model
+    comments: [{
+        id: ObjectId, author: String, message: String
+    }]
 });
 
 const Recipe = mongoose.model('Recipe', recipeSchema, "recipe");

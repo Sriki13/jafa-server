@@ -10,12 +10,13 @@ module.exports = jwt;
 
 function jwt() {
     const secret = config.secret;
-    return expressJwt({ secret, isRevoked }).unless({
+    return expressJwt({secret, isRevoked}).unless({
         path: [
             // public routes that don't require authentication
             '/jafa/api/users/authenticate',
             '/jafa/api/users/register',
             '/jafa/api/foods',
+            {url: "/jafa/api/recipes", methods: ["GET"]},
             '/foods/:id',
             {url: /\/jafa\/api\/foods\/.*\/score/, methods: ['GET']},
             {url: "/jafa/api/recipes", methods: ['OPTIONS']},
@@ -44,6 +45,6 @@ async function isRevoked(req, payload, done) {
         return done(null, true);
     }
 
-    req.decoded_user = user
+    req.decoded_user = user;
     done();
 }

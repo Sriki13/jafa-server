@@ -41,7 +41,7 @@ const foodSchema = new mongoose.Schema({
     comments: [{
         id: ObjectId, author: String, message: String
     }]
-});
+}, {id: false});
 
 
 function checkArrayDefined(item) {

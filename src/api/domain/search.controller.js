@@ -7,10 +7,13 @@ function logs(val) {
     logging = val;
 }
 
-async function fetchFood(name) {
+async function fetchFood(name, limit) {
+    if (limit === undefined) {
+        limit = 20;
+    }
     let foods = await Food.find({
         product_name: {'$regex': name, '$options': 'i'}
-    }).limit(20);
+    }).limit(limit);
     let result = [];
     foods.forEach(food => {
         if (food.product_name !== undefined && food.product_name.length !== 0) {
@@ -35,7 +38,7 @@ async function updateFood(food) {
 
 async function fetchRecipe(name) {
     let recipes = await Recipe.find({
-        name: {'$regex': name, '$options': 'i'}
+        title: {'$regex': name, '$options': 'i'}
     }).limit(20);
     let result = [];
     recipes.forEach(recipe => {

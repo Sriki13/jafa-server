@@ -5,7 +5,7 @@ async function createRecipe(req, res) {
     if (req.body.recipeText === undefined) {
         return res.status(HttpStatus.BAD_REQUEST).send("recipeText required");
     }
-    let userId = 0; // TODO: find userId in req
+    let userId = req.decoded_user.id;
     try {
         let recipe = await controller.parseRecipe(req.body.recipeText, userId);
         let suggestions = await controller.suggestFoods(recipe.ingredients);
@@ -19,7 +19,7 @@ async function createRecipe(req, res) {
 }
 
 async function setRecipeIngredient(req, res) {
-    let userId = 0; // TODO: find userId in req
+    let userId = req.decoded_user.id;
     for (let str of ["position", "foodId"]) {
         if (req.body[str] === undefined) {
             return res.status(HttpStatus.BAD_REQUEST).send(str + "required");
