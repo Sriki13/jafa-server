@@ -31,4 +31,4 @@ async function isRevoked(req, payload, done) {
 
     req.decoded_user = user
     done();
-};
+}

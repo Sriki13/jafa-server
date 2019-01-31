@@ -18,7 +18,8 @@ async function fetchFood(name) {
                 id: food.id,
                 name: food.product_name,
                 ingredients: food.ingredients,
-                images: food.getImagesData()
+                images: food.getImagesData(),
+                nutriments: food.nutriments
             });
         }
     });
