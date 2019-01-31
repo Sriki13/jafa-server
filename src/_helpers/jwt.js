@@ -17,7 +17,21 @@ function jwt() {
             '/jafa/api/users/register',
             '/jafa/api/foods',
             '/foods/:id',
-            {url: '/jafa/api/foods/:id/score', methods: ['GET']}
+            {url: '/jafa/api/foods/:id/score', methods: ['GET']},
+            {url: "/jafa/api/recipes", methods: ['OPTIONS']},
+            {url: "/jafa/api/foods/:id/score", methods: ['OPTIONS']},
+            {url: "/jafa/api/foods/:id/score", methods: ['OPTIONS']},
+            {url: '/jafa/api/foods/:id/comment', methods: ['OPTIONS']},
+            {url: "/jafa/api/recipes", methods: ['OPTIONS']},
+            {url: "/jafa/api/recipes/:id/ingredients", methods: ['OPTIONS']},
+            // Users routes
+            {url: '/jafa/api/users/', methods: ['OPTIONS']},
+            {url: '/jafa/api/users/current', methods: ['OPTIONS']},
+            {url: '/jafa/api/users/:id', methods: ['OPTIONS']},
+            {url: '/jafa/api/users/:id', methods: ['OPTIONS']},
+            {url: '/jafa/api/users/:id', methods: ['OPTIONS']},
+            
+
         ]
     });
 }
