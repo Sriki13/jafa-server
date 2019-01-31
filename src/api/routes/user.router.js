@@ -13,7 +13,7 @@ module.exports = {
     getById,
     update,
     _delete
-}
+};
 
 function authenticate(req, res, next) {
     userService.authenticate(req.body)

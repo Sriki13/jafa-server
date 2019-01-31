@@ -40,7 +40,7 @@ async function parseRecipe(recipeText, authorId) {
     if (recipe.ingredients.length === 0) {
         throw new exceptions.InvalidRecipeFormat();
     }
-    let text = recipeText.substring(recipeText.find("-[^\\n]+"));
+    let text = recipeText.substring(recipeText.search("-[^\\n]+"));
     text.replace("-[^\\n]+", "");
     recipe.text = text;
     await recipe.save();

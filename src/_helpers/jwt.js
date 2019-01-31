@@ -30,4 +30,4 @@ async function isRevoked(req, payload, done) {
     }
 
     done();
-};
+}
