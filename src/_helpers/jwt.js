@@ -17,6 +17,7 @@ function jwt() {
             '/jafa/api/users/register',
             '/jafa/api/foods',
             '/foods/:id',
+            {url: '/jafa/api/foods/:id/score', methods: [GET]}
         ]
     });
 }
