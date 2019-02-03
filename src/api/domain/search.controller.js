@@ -30,10 +30,10 @@ async function fetchFood(name, limit) {
 }
 
 async function updateFood(food) {
-    if ('undefined' === typeof(food['id'])) {
+    if ('undefined' === typeof(food['_id'])) {
         throw "Food object must have 'id' attribute"
     }
-    return await Food.findOneAndUpdate({id: food.id}, {$set: food}, {new: true})
+    return await Food.findOneAndUpdate({id: food._id}, {$set: food}, {new: true})
 }
 
 async function fetchRecipe(name) {

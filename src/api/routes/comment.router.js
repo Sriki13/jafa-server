@@ -1,19 +1,22 @@
 const controller = require("../domain/comment.controller");
 const HttpStatus = require("http-status-codes");
 
+
+function sendNotFoodFoundIdResponse(res, id) {
+    return res.status(HttpStatus.BAD_REQUEST).send("No food found for " + id + " id")
+}
+
+function sendOKResponse(res, food) {
+    return res.status(HttpStatus.OK).send(food);
+}
+
 async function addComment(req, res) {
-    if (req.body.message === undefined) {
+    if (req.body.message === undefined || req.body.message === null) {
         return res.status(HttpStatus.BAD_REQUEST).send("message undefined");
     }
-    if (req.body.author === undefined) {
-        return res.status(HttpStatus.BAD_REQUEST).send("author undefined");
-    }
 
-    let food = await controller.createComment(req.params.id, req.body);
-    if (food === null) {
-        return res.status(HttpStatus.BAD_REQUEST).send("No food found for " + req.params.id + " id")
-    }
-    return res.status(HttpStatus.OK).send(food);
+    let food = await controller.createComment(req.params.id, req.body, req.decoded_user);
+    return (food === null) ? sendNotFoodFoundIdResponse(res, req.params.id) : sendOKResponse(res, food);
 }
 
 module.exports = {

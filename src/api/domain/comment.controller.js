@@ -1,19 +1,17 @@
 const Food             = require("./models/food").Food;
-const SearchController = require("./search.controller")
-const Exceptions       = require("./exceptions")
+const SearchController = require("./search.controller");
 
 
-
-async function createComment(foodId, comment) {
-    let food = await Food.findOne({id: foodId})
+async function createComment(foodId, comment, author) {
+    let food = await Food.findOne({id: foodId});
     
     if (!food) {
         return null
     }
 
-    food.comments.push(comment)
-    food = await SearchController.updateFood(food)
-    return food
+    comment.author = author;
+    food.comments.push(comment);
+    return await SearchController.updateFood(food);
 }
 
 
