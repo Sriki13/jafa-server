@@ -4,7 +4,6 @@ const scoreRouter   = require("./score.router");
 const commentRouter = require("./comment.router");
 const recipeRouter = require("./recipe.router");
 const userRouter    = require("./user.router");
-const storeRouter = require("./store.router");
 
 const router = express.Router();
 
@@ -23,10 +22,6 @@ router.get('/foods/:id/comment', commentRouter.getComments);
 
 router.post("/recipes", recipeRouter.createRecipe);
 router.post("/recipes/:id/ingredients", recipeRouter.setRecipeIngredient);
-
-router.get("/stores", storeRouter.fetchStores);
-router.get("/stores/:id", storeRouter.fetchStore);
-router.post("/stores", storeRouter.createStore);
 
 
 // Users routes

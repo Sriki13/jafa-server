@@ -10,7 +10,6 @@ async function fetchScore(req, res) {
         if (e instanceof exceptions.NoSuchFoodException) {
             return res.status(HttpStatus.BAD_REQUEST).send(e.message);
         }
-        console.log(e);
         return res.status(HttpStatus.BAD_REQUEST).send(e);
     }
 }
@@ -29,7 +28,6 @@ async function createScore(req, res) {
         if (e instanceof exceptions.NoSuchFoodException) {
             return res.status(HttpStatus.BAD_REQUEST).send(e.message);
         }
-        console.log(e);
         return res.status(HttpStatus.BAD_REQUEST).send(e);
     }
 }

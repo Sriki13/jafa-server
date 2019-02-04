@@ -22,8 +22,7 @@ async function searchFood(req, res) {
     if (req.query.name !== undefined) {
         search = req.query.name;
     }
-    let items = await controller.fetchFood(search, req.query.limit, req.query.criteria,
-        req.query.order, req.query.page);
+    let items = await controller.fetchFood(search);
     return res.status(HttpStatus.OK).send(items);
 }
 

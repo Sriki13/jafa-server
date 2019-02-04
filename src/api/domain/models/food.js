@@ -7,50 +7,45 @@ async function findFoodByStringId(id) {
 }
 
 const foodSchema = new mongoose.Schema({
-    validator: {
-        $jsonSchema: {
-            _id: String,
-            product_name: String,
-            ingredients: [{
-                text: String, id: String, rank: Number
-            }],
+    _id: String,
+    product_name: String,
+    ingredients: [{
+        text: String, id: String, rank: Number
+    }],
 
-            images: Object,
+    images: Object,
 
-            manufacturing_places_tags: [String],
-            packaging: String,
-            brands: String,
+    manufacturing_places_tags: [String],
+    packaging: String,
+    brands: String,
 
-            rev: Number, // number of revisions
+    rev: Number, // number of revisions
 
-            quantity: String,
-            serving_size: String,
-            product_quantity: String,
-            serving_quantity: Number,
+    quantity: String,
+    serving_size: String,
+    product_quantity: String,
+    serving_quantity: Number,
 
-            states_tags: [String],
-            categories_tags: [String],
-            allergens_tags: [String],
-            traces_tags: [String],
-            quality_tags: [String],
-            vitamin_tags: [String],
-            additives_tags: [String],
-            nutrient_levels_tags: [String],
+    states_tags: [String],
+    categories_tags: [String],
+    allergens_tags: [String],
+    traces_tags: [String],
+    quality_tags: [String],
+    vitamin_tags: [String],
+    additives_tags: [String],
+    nutrient_levels_tags: [String],
 
-            nutrition_grades_tags: [String],
-            nutrition_data_prepared_per: [String],
-            nutrition_data_per: [String],
+    nutrition_grades_tags: [String],
+    nutrition_data_prepared_per: [String],
+    nutrition_data_per: [String],
 
-            nutriments: Object,
-            with_sweeteners: Number, // 1 if true
+    nutriments: Object,
+    with_sweeteners: Number, // 1 if true
 
-            scores: [Number],
-            score: {type: Number, default: 0},
-            comments: [{
-                id: ObjectId, author: String, message: String, timestamp: Date
-            }]
-        }
-    }
+    scores: [Number],
+    comments: [{
+        id: ObjectId, author: String, message: String, timestamp: Date
+    }]
 });
 
 
