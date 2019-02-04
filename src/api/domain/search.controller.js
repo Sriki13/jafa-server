@@ -18,7 +18,7 @@ async function fetchFood(name, limit) {
     foods.forEach(food => {
         if (food.product_name !== undefined && food.product_name.length !== 0) {
             result.push({
-                id: food.id,
+                id: food._id,
                 name: food.product_name,
                 ingredients: food.ingredients,
                 images: food.getImagesData(),
