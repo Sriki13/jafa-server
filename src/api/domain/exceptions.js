@@ -3,7 +3,7 @@ function NoSuchFoodException(id) {
 }
 
 function AttributeIsMissing(objectName, attributeName) {
-    this.message = "Attribute '" + attributeName + "' is missing from '" + objectName + "'" 
+    this.message = "Attribute '" + attributeName + "' is missing from '" + objectName + "'"
 }
 
 function NoRecipeTitle() {
@@ -24,11 +24,16 @@ function InvalidUserException(desc) {
     this.message = "This user cannot do this operation\n " + desc;
 }
 
+function InvalidOrderException(order) {
+    this.message = "Invalid order used (" + order + "): valid options are asc and desc"
+}
+
 module.exports = {
     NoSuchFoodException,
     AttributeIsMissing,
     NoRecipeTitle,
     InvalidRecipeFormat,
     InvalidRecipeIngredient,
-    InvalidUserException
+    InvalidUserException,
+    InvalidOrderException
 };

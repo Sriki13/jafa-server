@@ -1,24 +1,33 @@
 const food = require("./models/food");
 const Food = food.Food;
 const Recipe = require("./models/recipe").Recipe;
-
-let logging = true;
-
-function logs(val) {
-    logging = val;
-}
+const exceptions = require("./exceptions");
 
 async function getFoodById(id) {
     return await food.findFoodByStringId(id);
 }
 
-async function fetchFood(name, limit) {
+async function fetchFood(name, limit, criteria, order, page) {
     if (limit === undefined) {
         limit = 20;
     }
+    if (order != null && order !== "asc" && order !== "desc") {
+        throw new exceptions.InvalidOrderException(order);
+    }
+    let sort = {};
+    if (criteria != null) {
+        sort = (order === "desc" ? "-" : "") + criteria
+    }
+    let skip = 0;
+    if (page != null) {
+        skip = limit * page;
+    }
     let foods = await Food.find({
         product_name: {'$regex': name, '$options': 'i'}
-    }).limit(limit);
+    })
+        .skip(skip)
+        .limit(limit)
+        .sort(sort);
     let result = [];
     foods.forEach(food => {
         if (food.product_name !== undefined && food.product_name.length !== 0) {
@@ -27,7 +36,8 @@ async function fetchFood(name, limit) {
                 name: food.product_name,
                 ingredients: food.ingredients,
                 images: food.getImagesData(),
-                nutriments: food.nutriments
+                nutriments: food.nutriments,
+                score: food.score,
             });
         }
     });
@@ -76,6 +86,5 @@ module.exports = {
     fetchFood,
     updateFood,
     fetchRecipe,
-    getFoodById,
-    logs
+    getFoodById
 };
