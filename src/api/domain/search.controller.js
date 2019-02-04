@@ -7,7 +7,6 @@ async function getFoodById(id) {
 }
 
 async function fetchFood(name, limit, criteria, order, page) {
-    console.log(name);
     if (limit == null) {
         limit = 20;
     } else {
