@@ -30,16 +30,15 @@ async function fetchFood(name, limit, criteria, order, page) {
     }, options).toArray();
     let result = [];
     foods.forEach(food => {
-        if (food.product_name !== undefined && food.product_name.length !== 0) {
-            result.push({
-                id: food._id,
-                name: food.product_name,
-                ingredients: food.ingredients,
-                images: foodModel.getImagesData(food),
-                nutriments: food.nutriments,
-                score: food.score,
-            });
-        }
+        console.log(food.score);
+        result.push({
+            id: food._id,
+            name: food.product_name,
+            ingredients: food.ingredients,
+            images: foodModel.getImagesData(food),
+            nutriments: food.nutriments,
+            score: food.score,
+        });
     });
     return result;
 }
