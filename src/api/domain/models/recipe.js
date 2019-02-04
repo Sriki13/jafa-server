@@ -10,7 +10,7 @@ const recipeSchema = new mongoose.Schema({
         name: String,
         quantity: Number,
         unit: String,
-        foodId: ObjectId
+        foodId: String
     }, {_id: false})],
     date: Date,
     comments: [{

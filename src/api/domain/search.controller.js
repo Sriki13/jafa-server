@@ -1,10 +1,15 @@
-const Food = require("./models/food").Food;
+const food = require("./models/food");
+const Food = food.Food;
 const Recipe = require("./models/recipe").Recipe;
 
 let logging = true;
 
 function logs(val) {
     logging = val;
+}
+
+async function getFoodById(id) {
+    return await food.findFoodByStringId(id);
 }
 
 async function fetchFood(name, limit) {
@@ -18,7 +23,7 @@ async function fetchFood(name, limit) {
     foods.forEach(food => {
         if (food.product_name !== undefined && food.product_name.length !== 0) {
             result.push({
-                id: food.id,
+                id: food._id,
                 name: food.product_name,
                 ingredients: food.ingredients,
                 images: food.getImagesData(),
@@ -71,5 +76,6 @@ module.exports = {
     fetchFood,
     updateFood,
     fetchRecipe,
+    getFoodById,
     logs
 };

@@ -4,9 +4,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const {configure} = require('./config/express');
+const MongoClient = require('mongodb').MongoClient;
 
 let app;
 let server;
+let mongoDatabase;
 
 /**
  * Start the web app.
@@ -37,7 +39,14 @@ async function start() {
         host = "localhost";
     }
 
-    mongoose.connect("mongodb://" + credentials + host + ":" + mongoPort + "/" + mongoName);
+    let url = "mongodb://" + credentials + host + ":" + mongoPort + "/";
+
+    mongoose.connect(url + mongoName);
+
+    MongoClient.connect(url, function (err, db) {
+        if (err) throw err;
+        mongoDatabase = db.db(mongoName);
+    });
 
     const db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
@@ -59,7 +68,12 @@ async function stop() {
         server = null;
         app = null;
     }
+    mongoDatabase.close();
     return Promise.resolve();
+}
+
+function getDatabase() {
+    return mongoDatabase;
 }
 
 if (!module.parent) {
@@ -69,6 +83,7 @@ if (!module.parent) {
 module.exports = {
     start,
     stop,
+    getDatabase,
     get server() {
         return server;
     },

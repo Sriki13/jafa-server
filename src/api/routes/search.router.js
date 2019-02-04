@@ -45,8 +45,17 @@ async function searchRecipe(req, res) {
     return res.status(HttpStatus.OK).send(items);
 }
 
+async function getFood(req, res) {
+    let food = await controller.getFoodById(req.params.id);
+    if (food == null) {
+        return res.status(HttpStatus.BAD_REQUEST).send("No food with id " + req.params.id);
+    }
+    return res.status(HttpStatus.OK).send(food);
+}
+
 module.exports = {
     searchFood,
     updateFood,
-    searchRecipe
+    searchRecipe,
+    getFood
 };

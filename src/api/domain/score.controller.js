@@ -1,4 +1,4 @@
-const Food = require("./models/food").Food;
+const foodModel = require("./models/food");
 const exceptions = require("./exceptions");
 
 let logging = true;
@@ -8,7 +8,7 @@ function logs(val) {
 }
 
 async function findFood(id) {
-    let food = await Food.findById(id);
+    let food = await foodModel.findFoodByStringId(String(id));
     if (food === undefined || food === null) {
         throw new exceptions.NoSuchFoodException(id);
     }

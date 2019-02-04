@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
+async function findFoodByStringId(id) {
+    const app = require("./../../../app");
+    return await app.getDatabase().collection("france").findOne({_id: id});
+}
+
 const foodSchema = new mongoose.Schema({
     _id: String,
     product_name: String,
@@ -41,7 +46,7 @@ const foodSchema = new mongoose.Schema({
     comments: [{
         id: ObjectId, author: String, message: String
     }]
-}, {id: false});
+});
 
 
 function checkArrayDefined(item) {
@@ -90,8 +95,10 @@ foodSchema.methods.getImagesData = function () {
     return result;
 };
 
+
 const Food = mongoose.model('Food', foodSchema, "france");
 
 module.exports = {
-    Food
+    Food,
+    findFoodByStringId,
 };
