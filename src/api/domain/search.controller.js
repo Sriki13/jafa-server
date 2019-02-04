@@ -10,13 +10,15 @@ async function fetchFood(name, limit, criteria, order, page) {
     console.log(name);
     if (limit == null) {
         limit = 20;
+    } else {
+        limit = Number(limit);
     }
     if (order != null && order !== "asc" && order !== "desc") {
         throw new exceptions.InvalidOrderException(order);
     }
     let skip = 0;
     if (page != null) {
-        skip = limit * page;
+        skip = limit * Number(page);
     }
     let options = {
         limit: limit,
@@ -30,7 +32,6 @@ async function fetchFood(name, limit, criteria, order, page) {
     }, options).toArray();
     let result = [];
     foods.forEach(food => {
-        console.log(food.score);
         result.push({
             id: food._id,
             name: food.product_name,
