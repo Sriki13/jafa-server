@@ -39,7 +39,7 @@ const foodSchema = new mongoose.Schema({
 
     scores: [Number],
     comments: [{
-        id: ObjectId, author: String, message: String
+        id: ObjectId, author: String, message: String, timestamp: Date
     }]
 }, {id: false});
 

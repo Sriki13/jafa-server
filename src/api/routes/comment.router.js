@@ -6,8 +6,8 @@ function sendNotFoodFoundIdResponse(res, id) {
     return res.status(HttpStatus.BAD_REQUEST).send("No food found for " + id + " id")
 }
 
-function sendOKResponse(res, food) {
-    return res.status(HttpStatus.OK).send(food);
+function sendOKResponse(res, object) {
+    return res.status(HttpStatus.OK).send(object);
 }
 
 async function addComment(req, res) {
@@ -19,6 +19,13 @@ async function addComment(req, res) {
     return (food === null) ? sendNotFoodFoundIdResponse(res, req.params.id) : sendOKResponse(res, food);
 }
 
+async function getComments(req, res) {
+    let comments = await controller.getComments(req.params.id);
+    return (comments === null) ? sendNotFoodFoundIdResponse(res, req.params.id) : sendOKResponse(res, comments);
+}
+
+
 module.exports = {
     addComment,
+    getComments,
 };

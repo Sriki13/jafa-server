@@ -16,6 +16,8 @@ router.get("/foods/:id/score", scoreRouter.fetchScore);
 router.post("/foods/:id/score", scoreRouter.createScore);
 
 router.post('/foods/:id/comment', commentRouter.addComment);
+router.get('/foods/:id/comment', commentRouter.getComments);
+
 
 router.post("/recipes", recipeRouter.createRecipe);
 router.post("/recipes/:id/ingredients", recipeRouter.setRecipeIngredient);
