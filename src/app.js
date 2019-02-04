@@ -39,9 +39,8 @@ async function start() {
         host = "localhost";
     }
 
-    let url = "mongodb://" + credentials + host + ":" + mongoPort + "/";
-
-    mongoose.connect(url + mongoName);
+    let url = "mongodb://" + credentials + host + ":" + mongoPort + "/" + mongoName;
+    mongoose.connect(url);
 
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
