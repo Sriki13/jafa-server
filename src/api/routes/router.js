@@ -8,6 +8,7 @@ const userRouter    = require("./user.router");
 const router = express.Router();
 
 router.get("/foods", searchRouter.searchFood);
+router.get("/foods/:id", searchRouter.getFood);
 router.put("/foods", searchRouter.updateFood);
 router.get("/recipes", searchRouter.searchRecipe);
 

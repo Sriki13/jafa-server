@@ -1,10 +1,15 @@
-const Food = require("./models/food").Food;
+const food = require("./models/food");
+const Food = food.Food;
 const Recipe = require("./models/recipe").Recipe;
 
 let logging = true;
 
 function logs(val) {
     logging = val;
+}
+
+async function getFoodById(id) {
+    return await food.findFoodByStringId(id);
 }
 
 async function fetchFood(name, limit) {
@@ -71,5 +76,6 @@ module.exports = {
     fetchFood,
     updateFood,
     fetchRecipe,
+    getFoodById,
     logs
 };

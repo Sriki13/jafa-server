@@ -1,8 +1,7 @@
 const Recipe = require("./models/recipe").Recipe;
-const Food = require("./models/food").Food;
+const food = require("./models/food");
 const exceptions = require("./exceptions");
 const search = require("./search.controller");
-const ObjectId = require("mongoose").Types.ObjectId;
 
 async function parseRecipe(recipeText, authorId) {
     recipeText = recipeText.trim();
@@ -64,7 +63,7 @@ async function updateRecipeIngredient(userId, recipeId, position, foodId) {
         throw new exceptions.InvalidUserException("User is not the author of the recipe");
     }
     console.log(typeof foodId);
-    let food = await Food.findById(foodId);
+    let food = await food.findFoodByStringId(foodId);
     if (food === undefined) {
         throw new exceptions.NoSuchFoodException(foodId);
     }
