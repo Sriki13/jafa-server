@@ -1,11 +1,8 @@
-// This file is from the tutorial :
-//    http://jasonwatmore.com/post/2018/06/14/nodejs-mongodb-simple-api-for-authentication-registration-and-user-management
-
-
 const config = require('../../config.json');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const User = require('./models/user');
+const userModel = require('./models/user');
+const ObjectId = require('mongodb').ObjectID;
 
 module.exports = {
     authenticate,
@@ -16,11 +13,11 @@ module.exports = {
     delete: _delete
 };
 
-async function authenticate({ username, password }) {
-    const user = await User.findOne({ username });
+async function authenticate({username, password}) {
+    const user = await userModel.getCollection().findOne({username});
     if (user && bcrypt.compareSync(password, user.hash)) {
-        const { hash, ...userWithoutHash } = user.toObject();
-        const token = jwt.sign({ sub: user.id }, config.secret);
+        const {hash, ...userWithoutHash} = user;
+        const token = jwt.sign({sub: user._id}, config.secret);
         return {
             ...userWithoutHash,
             token
@@ -29,20 +26,20 @@ async function authenticate({ username, password }) {
 }
 
 async function getAll() {
-    return await User.find().select('-hash');
+    return await userModel.getCollection().find().project({hash: 0}).toArray();
 }
 
 async function getById(id) {
-    return await User.findById(id).select('-hash');
+    return await userModel.getCollection().findOne({_id: ObjectId(id)});
 }
 
 async function create(userParam) {
     // validate
-    if (await User.findOne({ username: userParam.username })) {
+    if (await userModel.getCollection().findOne({username: userParam.username})) {
         throw 'Username "' + userParam.username + '" is already taken';
     }
 
-    const user = new User(userParam);
+    const user = userParam;
 
     // hash password
     if (userParam.password) {
@@ -50,15 +47,16 @@ async function create(userParam) {
     }
 
     // save user
-    await user.save();
+    await userModel.getCollection().save(user);
 }
 
 async function update(id, userParam) {
-    const user = await User.findById(id);
+    const user = await userModel.getCollection().findOne({_id: ObjectId(id)});
 
     // validate
     if (!user) throw 'User not found';
-    if (user.username !== userParam.username && await User.findOne({ username: userParam.username })) {
+    if (user.username !== userParam.username
+        && await userModel.getCollection().findOne({username: userParam.username})) {
         throw 'Username "' + userParam.username + '" is already taken';
     }
 
@@ -74,5 +72,5 @@ async function update(id, userParam) {
 }
 
 async function _delete(id) {
-    await User.findByIdAndRemove(id);
+    await userModel.getCollection().findOneAndDelete({_id: ObjectId(id)});
 }

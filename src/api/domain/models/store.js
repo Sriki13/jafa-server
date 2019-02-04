@@ -1,16 +1,16 @@
 // Kept here as reference
 // noinspection JSUnusedLocalSymbols
-const schema = {
-    username: String,
-    hash: String,
-    firstName: String,
-    lastName: String,
-    date: Date
+const storeSchema = {
+    id: Number, // MongoId
+    name: String,
+    address: String,
+    lat: String,
+    long: String
 };
 
 function getCollection() {
     const db = require("./../../../app").getDatabase();
-    return db.collection("users");
+    return db.collection("stores");
 }
 
 module.exports = {

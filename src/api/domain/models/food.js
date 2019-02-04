@@ -1,12 +1,6 @@
-const mongoose = require('mongoose');
-const ObjectId = mongoose.Schema.Types.ObjectId;
-
-async function findFoodByStringId(id) {
-    const app = require("./../../../app");
-    return await app.getDatabase().collection("france").findOne({_id: id});
-}
-
-const foodSchema = new mongoose.Schema({
+// Kept here as reference
+// noinspection JSUnusedLocalSymbols
+const foodSchema = {
     _id: String,
     product_name: String,
     ingredients: [{
@@ -43,62 +37,77 @@ const foodSchema = new mongoose.Schema({
     with_sweeteners: Number, // 1 if true
 
     scores: [Number],
+    score: Number,
     comments: [{
-        id: ObjectId, author: String, message: String, timestamp: Date
+        id: Number, // MongoId
+        author: String,
+        message: String,
+        timestamp: Date
     }]
-});
+};
 
 
 function checkArrayDefined(item) {
     return item !== undefined && item !== [];
 }
 
-foodSchema.methods.assignInitialScore = function () {
-    console.log("Assigning new score");
-    if (this.product_name === undefined) {
+function assignInitialScore(food) {
+    console.log("Assigning new score to " + food._id + " with name " + food.product_name);
+    if (food.product_name === undefined) {
         let result = [];
         result.push(0);
-        this.scores = result;
+        food.scores = result;
         return;
     }
     let base = 0;
-    if (checkArrayDefined(this.ingredients)) {
+    if (checkArrayDefined(food.ingredients)) {
         base += 2;
     }
     for (let str in ["states_tags", "categories_tags"]) {
-        if (checkArrayDefined(this[str])) {
+        if (checkArrayDefined(food[str])) {
             base += 1;
         }
     }
-    if (this.quantity !== undefined) {
+    if (food.quantity !== undefined) {
         base += 1;
     }
-    if (this.nutriments !== undefined && this.nutriments !== {}) {
+    if (food.nutriments !== undefined && food.nutriments !== {}) {
         base += 1;
     }
     base += Math.random() * 4;
     let result = [];
     result.push(base);
-    this.scores = result;
-};
+    food.scores = result;
+}
 
-foodSchema.methods.getImagesData = function () {
+function getImagesData(food) {
     let result = [];
-    for (let prop in this.images) {
+    for (let prop in food.images) {
         if (isNaN(prop)) {
             result.push({
                 name: prop,
-                rev: this.images[prop].rev
+                rev: food.images[prop].rev
             });
         }
     }
     return result;
-};
+}
 
+async function updateFood(food) {
+    if (food._id == null) {
+        throw "Food object must have 'id' attribute";
+    }
+    return await getCollection().findOneAndUpdate({id: food._id}, {$set: food}, {new: true});
+}
 
-const Food = mongoose.model('Food', foodSchema, "france");
+function getCollection() {
+    const db = require("./../../../app").getDatabase();
+    return db.collection("france");
+}
 
 module.exports = {
-    Food,
-    findFoodByStringId,
+    getImagesData,
+    assignInitialScore,
+    getCollection,
+    updateFood
 };
