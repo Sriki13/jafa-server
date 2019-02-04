@@ -1,26 +1,26 @@
-const Store = require("./models/store").Store;
+const storeModel = require("./models/store");
 
 async function getStore(id) {
-    return await Store.findById(String(id));
+    return await storeModel.getCollection().findById(String(id));
 }
 
 async function getStores(search) {
     if (search == null) {
         search = "";
     }
-    return await Store.find({
+    return await storeModel.getCollection().find({
         name: {'$regex': search, '$options': 'i'}
-    }).limit(10);
+    }, {limit: 10});
 }
 
 async function addStore(name, address, lat, long) {
-    let store = new Store({
+    let store = {
         name: name,
         address: address,
         lat: lat,
         long: long
-    });
-    await store.save();
+    };
+    await storeModel.getCollection().save(store);
     return store;
 }
 

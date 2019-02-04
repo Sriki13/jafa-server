@@ -1,7 +1,8 @@
-const Recipe = require("./models/recipe").Recipe;
-const food = require("./models/food");
+const recipeModel = require("./models/recipe");
+const foodModel = require("./models/food");
 const exceptions = require("./exceptions");
 const search = require("./search.controller");
+const ObjectId = require('mongodb').ObjectID;
 
 async function parseRecipe(recipeText, authorId) {
     recipeText = recipeText.trim();
@@ -13,13 +14,13 @@ async function parseRecipe(recipeText, authorId) {
     if (ingredientLines.length === 0) {
         throw new exceptions.InvalidRecipeFormat();
     }
-    let recipe = new Recipe({
+    let recipe = {
         title: spLines[0],
         authorId: authorId,
         ingredients: [],
         comments: [],
         date: new Date()
-    });
+    };
     for (let line of ingredientLines) {
         let ingredient = {};
         const sp = line.split("/");
@@ -42,7 +43,7 @@ async function parseRecipe(recipeText, authorId) {
     }
     let text = recipeText.substring(recipeText.search("-[^\\n]+"));
     recipe.text = text.replace(new RegExp("-[^\\n]+", "g"), "").trim();
-    await recipe.save();
+    await recipeModel.getCollection().save(recipe);
     return recipe;
 }
 
@@ -55,20 +56,22 @@ async function suggestFoods(ingredients) {
 }
 
 async function updateRecipeIngredient(userId, recipeId, position, foodId) {
-    let recipe = await Recipe.findById(recipeId);
+    let recipe = await recipeModel.getCollection().findOne({_id: ObjectId(recipeId)});
+    if (recipe == null) {
+        throw new exceptions.InvalidRecipe(recipeId);
+    }
     if (position > recipe.ingredients.length - 1) {
         throw new exceptions.InvalidRecipeIngredient(position);
     }
     if (recipe.authorId.toString() !== userId) {
         throw new exceptions.InvalidUserException("User is not the author of the recipe");
     }
-    console.log(typeof foodId);
-    let food = await food.findFoodByStringId(foodId);
-    if (food === undefined) {
+    let food = await foodModel.getCollection().findOne({_id: foodId});
+    if (food == null) {
         throw new exceptions.NoSuchFoodException(foodId);
     }
     recipe.ingredients[position].foodId = foodId;
-    await recipe.save();
+    await recipeModel.getCollection().save(recipe);
 }
 
 module.exports = {

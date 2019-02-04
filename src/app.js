@@ -1,7 +1,6 @@
 const http = require('http');
 const co = require('co');
 const express = require('express');
-const mongoose = require('mongoose');
 
 const {configure} = require('./config/express');
 const MongoClient = require('mongodb').MongoClient;
@@ -40,19 +39,14 @@ async function start() {
     }
 
     let url = "mongodb://" + credentials + host + ":" + mongoPort + "/" + mongoName;
-    mongoose.connect(url);
 
-    MongoClient.connect(url, function (err, db) {
-        if (err) throw err;
+    MongoClient.connect(url).then(db => {
         mongoDatabase = db.db(mongoName);
-    });
-
-    const db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function () {
+    }).then(() => {
         console.log("Connection to DB successful");
+    }).catch(e => {
+        throw e;
     });
-
     return app;
 }
 

@@ -1,25 +1,29 @@
-const mongoose = require('mongoose');
-const ObjectId = require("mongoose").Schema.Types.ObjectId;
-
-const recipeSchema = new mongoose.Schema({
-    id: ObjectId,
+// Kept here as reference
+// noinspection JSUnusedLocalSymbols
+const recipeSchema = {
+    id: Number, // MongoId
     title: String,
     text: String,
-    authorId: ObjectId,
-    ingredients: [new mongoose.Schema({
+    authorId: Number, // MongoId
+    ingredients: [{
         name: String,
         quantity: Number,
         unit: String,
-        foodId: String
-    }, {_id: false})],
+        foodId: String // optional
+    }],
     date: Date,
     comments: [{
-        id: ObjectId, author: String, message: String
+        id: Number, // MongoId
+        author: String,
+        message: String
     }]
-});
+};
 
-const Recipe = mongoose.model('Recipe', recipeSchema, "recipe");
+function getCollection() {
+    const db = require("./../../../app").getDatabase();
+    return db.collection("recipes");
+}
 
 module.exports = {
-    Recipe
+    getCollection
 };

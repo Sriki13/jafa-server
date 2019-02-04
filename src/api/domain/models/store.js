@@ -1,16 +1,18 @@
-const mongoose = require('mongoose');
-const ObjectId = require("mongoose").Schema.Types.ObjectId;
-
-const storeSchema = new mongoose.Schema({
-    id: ObjectId,
+// Kept here as reference
+// noinspection JSUnusedLocalSymbols
+const storeSchema = {
+    id: Number, // MongoId
     name: String,
     address: String,
     lat: String,
     long: String
-});
+};
 
-const Store = mongoose.model('Store', storeSchema, "store");
+function getCollection() {
+    const db = require("./../../../app").getDatabase();
+    return db.collection("stores");
+}
 
 module.exports = {
-    Store
+    getCollection
 };

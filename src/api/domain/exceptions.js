@@ -28,6 +28,10 @@ function InvalidOrderException(order) {
     this.message = "Invalid order used (" + order + "): valid options are asc and desc"
 }
 
+function InvalidRecipe(id) {
+    this.message = "No recipe exists with id " + id;
+}
+
 module.exports = {
     NoSuchFoodException,
     AttributeIsMissing,
@@ -35,5 +39,6 @@ module.exports = {
     InvalidRecipeFormat,
     InvalidRecipeIngredient,
     InvalidUserException,
-    InvalidOrderException
+    InvalidOrderException,
+    InvalidRecipe
 };

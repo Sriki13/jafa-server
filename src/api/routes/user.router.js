@@ -22,6 +22,7 @@ function authenticate(req, res, next) {
 }
 
 function register(req, res, next) {
+    req.body.date = Date.now();
     userService.create(req.body)
         .then(() => res.json({}))
         .catch(err => next(err));
