@@ -1,16 +1,23 @@
 const storeModel = require("./models/store");
 
 async function getStore(id) {
-    return await storeModel.getCollection().findById(String(id));
+    return await storeModel.getCollection().findOne({_id: id});
 }
 
-async function getStores(search) {
+async function searchStore(search) {
     if (search == null) {
         search = "";
     }
-    return await storeModel.getCollection().find({
+    let count = await storeModel.getCollection().count({
         name: {'$regex': search, '$options': 'i'}
-    }, {limit: 10});
+    });
+    let data = await storeModel.getCollection().find({
+        name: {'$regex': search, '$options': 'i'}
+    }, {limit: 20}).toArray();
+    return {
+        data: data,
+        count: count
+    };
 }
 
 async function addStore(name, address, lat, long) {
@@ -26,6 +33,6 @@ async function addStore(name, address, lat, long) {
 
 module.exports = {
     getStore,
-    getStores,
+    searchStore,
     addStore
 };

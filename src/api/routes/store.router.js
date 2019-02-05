@@ -1,8 +1,9 @@
 const controller = require("../domain/store.controller");
 const HttpStatus = require("http-status-codes");
+const ObjectId = require('mongodb').ObjectID;
 
 async function fetchStore(req, res) {
-    let store = await controller.getStore(req.params.id);
+    let store = await controller.getStore(ObjectId(req.params.id));
     if (store == null) {
         return res.status(HttpStatus.NOT_FOUND).send();
     }
@@ -10,12 +11,12 @@ async function fetchStore(req, res) {
 }
 
 async function fetchStores(req, res) {
-    let stores = await controller.getStore(req.params.id);
+    let stores = await controller.searchStore(req.params.id);
     return res.status(HttpStatus.OK).send(stores);
 }
 
 async function createStore(req, res) {
-    for (let str in ["name", "address", "lat", "long"]) {
+    for (let str of ["name", "address", "lat", "long"]) {
         if (req.body[str] == null) {
             return res.status(HttpStatus.BAD_REQUEST).send(str + " must be defined in body");
         }
