@@ -3,7 +3,18 @@ const recipeModel = require("./models/recipe");
 const exceptions = require("./exceptions");
 
 async function getFoodById(id) {
-    return await foodModel.getCollection().findOne({_id: id});
+    return formatFood(await foodModel.getCollection().findOne({_id: id}));
+}
+
+function formatFood(food) {
+    return {
+        id: food._id,
+        name: food.product_name,
+        ingredients: food.ingredients,
+        images: foodModel.getImagesData(food),
+        nutriments: food.nutriments,
+        score: food.score,
+    };
 }
 
 async function fetchFood(name, limit, criteria, order, page) {
@@ -26,21 +37,20 @@ async function fetchFood(name, limit, criteria, order, page) {
     if (criteria != null) {
         options.sort = [[criteria, order]];
     }
+    let count = await foodModel.getCollection().count({
+        product_name: {'$regex': name, '$ne': "", '$exists': true, '$options': 'i'}
+    });
     let foods = await foodModel.getCollection().find({
-        product_name: {'$regex': name, '$options': 'i'}
+        product_name: {'$regex': name, '$ne': "", '$exists': true, '$options': 'i'}
     }, options).toArray();
     let result = [];
     foods.forEach(food => {
-        result.push({
-            id: food._id,
-            name: food.product_name,
-            ingredients: food.ingredients,
-            images: foodModel.getImagesData(food),
-            nutriments: food.nutriments,
-            score: food.score,
-        });
+        result.push(formatFood(food));
     });
-    return result;
+    return {
+        data: result,
+        count: count
+    };
 }
 
 async function fetchRecipe(name) {

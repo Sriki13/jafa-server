@@ -50,7 +50,7 @@ async function parseRecipe(recipeText, authorId) {
 async function suggestFoods(ingredients) {
     let result = [];
     for (let ingredient of ingredients) {
-        result.push(await search.fetchFood(ingredient.name, 3));
+        result.push(await search.fetchFood(ingredient.name, 3).data);
     }
     return result;
 }
