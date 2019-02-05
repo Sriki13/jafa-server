@@ -16,7 +16,7 @@ async function fetchStores(req, res) {
 }
 
 async function createStore(req, res) {
-    for (let str of ["name", "address", "lat", "long"]) {
+    for (let str of ["name", "address", "lat", "long", "region"]) {
         if (req.body[str] == null) {
             return res.status(HttpStatus.BAD_REQUEST).send(str + " must be defined in body");
         }
@@ -25,7 +25,8 @@ async function createStore(req, res) {
         req.body.name,
         req.body.address,
         req.body.lat,
-        req.body.long
+        req.body.long,
+        req.body.region
     ));
 }
 

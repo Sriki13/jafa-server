@@ -5,7 +5,8 @@ const storeSchema = {
     name: String,
     address: String,
     lat: String,
-    long: String
+    long: String,
+    region: String
 };
 
 function getCollection() {

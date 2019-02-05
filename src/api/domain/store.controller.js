@@ -20,12 +20,13 @@ async function searchStore(search) {
     };
 }
 
-async function addStore(name, address, lat, long) {
+async function addStore(name, address, lat, long, region) {
     let store = {
         name: name,
         address: address,
         lat: lat,
-        long: long
+        long: long,
+        region: region
     };
     await storeModel.getCollection().save(store);
     return store;

@@ -37,13 +37,19 @@ const foodSchema = {
     with_sweeteners: Number, // 1 if true
 
     scores: [Number],
-    score: Number,
+    score: Number, // average of scores
     comments: [{
         id: Number, // MongoId
         author: String,
         message: String,
         timestamp: Date
-    }]
+    }],
+
+    prices: [{
+        price: Number,
+        storeId: Number // MongoId
+    }],
+    price: Number // average of prices
 };
 
 
