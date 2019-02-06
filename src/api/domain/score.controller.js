@@ -38,6 +38,7 @@ async function getScore(id) {
 }
 
 async function addScore(id, score) {
+    score = parseFloat(score);
     let food = await findFood(id);
     await checkIfScoreIsDefined(food);
     food.scores.push(score);
