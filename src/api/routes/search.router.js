@@ -6,8 +6,11 @@ async function searchFood(req, res) {
     if (req.query.name !== undefined) {
         search = req.query.name;
     }
+    if (req.query.page != null && !isNaN(req.query.page) && req.query.page < 1) {
+        return res.status(HttpStatus.BAD_GATEWAY).send("Page must be a number greater or equal to 1");
+    }
     let items = await controller.fetchFood(search, req.query.limit, req.query.criteria,
-        req.query.order, req.query.page);
+        req.query.order, req.query.page - 1);
     return res.status(HttpStatus.OK).send(items);
 }
 
