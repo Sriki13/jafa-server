@@ -28,7 +28,7 @@ async function fetchFood(name, limit, criteria, order, page) {
     }
     let skip = 0;
     if (page != null) {
-        skip = limit * Number(page);
+        skip = limit * (page - 1);
     }
     let options = {
         limit: limit,
@@ -53,10 +53,17 @@ async function fetchFood(name, limit, criteria, order, page) {
     };
 }
 
-async function fetchRecipe(name) {
-    return await recipeModel.getCollection().find({
+async function fetchRecipe(name, page) {
+    let count = await recipeModel.getCollection().count({
         title: {'$regex': name, '$options': 'i'}
-    }, {limit: 20}).toArray();
+    });
+    let data = await recipeModel.getCollection().find({
+        title: {'$regex': name, '$options': 'i'}
+    }, {limit: 20, skip: 20 * (parseInt(page) - 1)}).toArray();
+    return {
+        data: data,
+        count: count
+    };
 }
 
 module.exports = {

@@ -9,8 +9,11 @@ async function searchFood(req, res) {
     if (req.query.page != null && !isNaN(req.query.page) && req.query.page < 1) {
         return res.status(HttpStatus.BAD_GATEWAY).send("Page must be a number greater or equal to 1");
     }
+    if (req.query.page == null) {
+        req.query.page = 1;
+    }
     let items = await controller.fetchFood(search, req.query.limit, req.query.criteria,
-        req.query.order, req.query.page - 1);
+        req.query.order, req.query.page);
     return res.status(HttpStatus.OK).send(items);
 }
 
@@ -29,7 +32,13 @@ async function searchRecipe(req, res) {
     if (req.query.name !== undefined) {
         search = req.query.name;
     }
-    let items = await controller.fetchRecipe(search);
+    if (req.query.page != null && !isNaN(req.query.page) && req.query.page < 1) {
+        return res.status(HttpStatus.BAD_GATEWAY).send("Page must be a number greater or equal to 1");
+    }
+    if (req.query.page == null) {
+        req.query.page = 1;
+    }
+    let items = await controller.fetchRecipe(search, req.query.page);
     return res.status(HttpStatus.OK).send(items);
 }
 
