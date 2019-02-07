@@ -106,8 +106,8 @@ async function updateFood(food) {
     return await getCollection().findOneAndUpdate({id: food._id}, {$set: food}, {new: true});
 }
 
-function getCollection() {
-    const db = require("./../../../app").getDatabase();
+async function getCollection() {
+    const db = await require('../../../_helpers/database');
     return db.collection("france");
 }
 

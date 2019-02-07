@@ -3,7 +3,9 @@ const recipeModel = require("./models/recipe");
 const exceptions = require("./exceptions");
 
 async function getFoodById(id) {
-    return formatFood(await foodModel.getCollection().findOne({_id: id}));
+    const foodCollection = await foodModel.getCollection();
+    let food = await foodCollection.findOne({_id: id});
+    return (food === null) ? null : formatFood(food);
 }
 
 function formatFood(food) {
@@ -35,12 +37,13 @@ async function fetchFood(name, limit, criteria, order, page) {
         skip: skip
     };
     if (criteria != null) {
-        options.sort = [[criteria, order]];
+        options.sort = [[criteria, (order === null) ? 'asc' : order]];
     }
-    let count = await foodModel.getCollection().count({
+    let foodCollection = await foodModel.getCollection();
+    let count = await foodCollection.count({
         product_name: {'$regex': name, '$ne': "", '$exists': true, '$options': 'i'}
     });
-    let foods = await foodModel.getCollection().find({
+    let foods = await foodCollection.find({
         product_name: {'$regex': name, '$ne': "", '$exists': true, '$options': 'i'}
     }, options).toArray();
     let result = [];
@@ -54,10 +57,11 @@ async function fetchFood(name, limit, criteria, order, page) {
 }
 
 async function fetchRecipe(name, page) {
-    let count = await recipeModel.getCollection().count({
+    let foodCollection = await foodModel.getCollection();
+    let count = await foodCollection.count({
         title: {'$regex': name, '$options': 'i'}
     });
-    let data = await recipeModel.getCollection().find({
+    let data = await foodCollection.find({
         title: {'$regex': name, '$options': 'i'}
     }, {limit: 20, skip: 20 * (parseInt(page) - 1)}).toArray();
     return {

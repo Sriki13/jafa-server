@@ -3,7 +3,6 @@ const co = require('co');
 const express = require('express');
 
 const {configure} = require('./config/express');
-const MongoClient = require('mongodb').MongoClient;
 
 let app;
 let server;
@@ -25,28 +24,6 @@ async function start() {
     await server.listen(port);
     console.log(`✔ Server running on port ${port}`);
 
-    let host = "ds159624.mlab.com";
-    let credentials = "";
-    let mongoPort = "59624";
-    let mongoName = "jafa";
-
-    if (process.env.JAFA_DB_USER !== undefined) {
-        credentials = process.env.JAFA_DB_USER + ":" + process.env.JAFA_DB_PASSWORD + "@";
-    } else {
-        mongoPort = "27017";
-        mongoName = "off";
-        host = "localhost";
-    }
-
-    let url = "mongodb://" + credentials + host + ":" + mongoPort + "/" + mongoName;
-
-    MongoClient.connect(url).then(db => {
-        mongoDatabase = db.db(mongoName);
-    }).then(() => {
-        console.log("Connection to DB successful");
-    }).catch(e => {
-        throw e;
-    });
     return app;
 }
 
@@ -61,12 +38,7 @@ async function stop() {
         server = null;
         app = null;
     }
-    mongoDatabase.close();
     return Promise.resolve();
-}
-
-function getDatabase() {
-    return mongoDatabase;
 }
 
 if (!module.parent) {
@@ -76,7 +48,6 @@ if (!module.parent) {
 module.exports = {
     start,
     stop,
-    getDatabase,
     get server() {
         return server;
     },
