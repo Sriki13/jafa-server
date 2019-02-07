@@ -4,8 +4,11 @@ const foodModel = require("./models/food");
 // Use to generate random prices for the whole database
 // noinspection JSUnusedLocalSymbols
 async function generateAllPrices() {
-    const allStores = await storeModel.getCollection().find({}).toArray();
-    const allFoods = await foodModel.getCollection().find({});
+    const collectionStore = await storeModel.getCollection();
+    const collectionFood= await foodModel.getCollection();
+
+    const allStores = await collectionStore.find({}).toArray();
+    const allFoods = await collectionFood.find({});
     allFoods.forEach(food => generateRandomPrice(allStores, food));
 }
 
@@ -25,7 +28,8 @@ async function generateRandomPrice(allStores, food) {
     }
     food.price = sum / food.prices.length;
     console.log("Generated prices for item " + food._id + " - " + food.product_name + " : " + food.price);
-    await foodModel.getCollection().save(food);
+    const collection = await foodModel.getCollection();
+    await collection.save(food);
 }
 
 function addRandomPrice(storeId, food) {

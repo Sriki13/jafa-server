@@ -8,7 +8,7 @@
     "mocha": "NODE_ENV=test _mocha -b",
     "start": "node .",
     "start:dev": "nodemon .",
-    "postinstall": "npm run apidoc",
+    "postinstall": "cross-env NODE_ENV=prod npm run apidoc",
     "test": "cross-env NODE_ENV=test mocha --recursive --exit",
     "apidoc": "apidoc -i src/api -o apidoc/"
   },

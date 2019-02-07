@@ -1,17 +1,19 @@
 const storeModel = require("./models/store");
 
 async function getStore(id) {
-    return await storeModel.getCollection().findOne({_id: id});
+    const collection = await storeModel.getCollection();
+    return await collection.findOne({_id: id});
 }
 
 async function searchStore(search) {
+    const collection = await storeModel.getCollection();
     if (search == null) {
         search = "";
     }
-    let count = await storeModel.getCollection().count({
+    let count = await collection.count({
         name: {'$regex': search, '$options': 'i'}
     });
-    let data = await storeModel.getCollection().find({
+    let data = await collection.find({
         name: {'$regex': search, '$options': 'i'}
     }, {limit: 20}).toArray();
     return {
@@ -28,7 +30,8 @@ async function addStore(name, address, lat, long, region) {
         long: long,
         region: region
     };
-    await storeModel.getCollection().save(store);
+    const collection = await storeModel.getCollection();
+    await collection.save(store);
     return store;
 }
 

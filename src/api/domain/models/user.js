@@ -8,8 +8,8 @@ const schema = {
     date: Date
 };
 
-function getCollection() {
-    const db = require("./../../../app").getDatabase();
+async function getCollection() {
+    const db = await require("./../../../_helpers/database");
     return db.collection("users");
 }
 

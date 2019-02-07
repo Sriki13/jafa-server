@@ -2,6 +2,7 @@ const MongoClient = require('mongodb').MongoClient;
 
 
 async function getDatabaseObject() {
+    // mongodb://<dbuser>:<dbpassword>@ds159624.mlab.com:59624/jafa
     let host = (process.env.NODE_ENV === 'test')  ? "ds221645.mlab.com" : "ds159624.mlab.com";
     let credentials = "";
     let mongoPort = (process.env.NODE_ENV === 'test')  ? "21645" : "59624";
@@ -20,6 +21,7 @@ async function getDatabaseObject() {
     }
 
     let url = "mongodb://" + credentials + host + ":" + mongoPort + "/" + mongoName;
+    console.log(url);
 
     let client = await MongoClient.connect(url);
     let db = await client.db(mongoName);

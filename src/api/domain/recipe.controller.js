@@ -43,7 +43,8 @@ async function parseRecipe(recipeText, authorId) {
     }
     let text = recipeText.substring(recipeText.search("-[^\\n]+"));
     recipe.text = text.replace(new RegExp("-[^\\n]+", "g"), "").trim();
-    await recipeModel.getCollection().save(recipe);
+    const collection = await recipeModel.getCollection();
+    await collection.save(recipe);
     return recipe;
 }
 
@@ -56,7 +57,8 @@ async function suggestFoods(ingredients) {
 }
 
 async function updateRecipeIngredient(userId, recipeId, position, foodId) {
-    let recipe = await recipeModel.getCollection().findOne({_id: ObjectId(recipeId)});
+    const collection = await recipeModel.getCollection();
+    let recipe = await collection.findOne({_id: ObjectId(recipeId)});
     if (recipe == null) {
         throw new exceptions.InvalidRecipe(recipeId);
     }
@@ -66,12 +68,12 @@ async function updateRecipeIngredient(userId, recipeId, position, foodId) {
     if (recipe.authorId.toString() !== userId) {
         throw new exceptions.InvalidUserException("User is not the author of the recipe");
     }
-    let food = await foodModel.getCollection().findOne({_id: foodId});
+    let food = await collection.findOne({_id: foodId});
     if (food == null) {
         throw new exceptions.NoSuchFoodException(foodId);
     }
     recipe.ingredients[position].foodId = foodId;
-    await recipeModel.getCollection().save(recipe);
+    await collection.save(recipe);
 }
 
 module.exports = {

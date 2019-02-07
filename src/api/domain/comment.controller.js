@@ -1,7 +1,8 @@
 const foodModel = require("./models/food");
 
 async function createComment(foodId, comment, author) {
-    let food = await foodModel.getCollection().findOne({_id: foodId});
+    const collection = await foodModel.getCollection();
+    let food = await collection.findOne({_id: foodId});
     if (!food) {
         return null;
     }
@@ -15,7 +16,8 @@ async function createComment(foodId, comment, author) {
 }
 
 async function getComments(foodId) {
-    let food = await foodModel.getCollection().findOne({_id: foodId});
+    const collection = await foodModel.getCollection();
+    let food = await collection.findOne({_id: foodId});
     if (!food) {
         return null;
     }

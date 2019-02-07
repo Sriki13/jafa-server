@@ -2,7 +2,8 @@ const foodModel = require("./models/food");
 const exceptions = require("./exceptions");
 
 async function findFood(id) {
-    let food = await foodModel.getCollection().findOne({_id: id});
+    const collection = await foodModel.getCollection();
+    let food = await collection.findOne({_id: id});
     if (food == null) {
         throw new exceptions.NoSuchFoodException(id);
     }
@@ -10,13 +11,14 @@ async function findFood(id) {
 }
 
 async function checkIfScoreIsDefined(food) {
+    const collection = await foodModel.getCollection();
     if (food.scores == null || food.scores.length === 0) {
         foodModel.assignInitialScore(food);
-        await foodModel.getCollection().save(food);
+        await collection.save(food);
     }
     if (food.score == null) {
         food.score = getAverageScore(food);
-        await foodModel.getCollection().save(food);
+        await collection.save(food);
     }
 }
 
@@ -38,12 +40,13 @@ async function getScore(id) {
 }
 
 async function addScore(id, score) {
+    const collection = await foodModel.getCollection();
     score = parseFloat(score);
     let food = await findFood(id);
     await checkIfScoreIsDefined(food);
     food.scores.push(score);
     food.score = getAverageScore(food);
-    await foodModel.getCollection().save(food);
+    await collection.save(food);
 }
 
 module.exports = {
