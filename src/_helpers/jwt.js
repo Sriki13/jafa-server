@@ -23,6 +23,8 @@ function jwt() {
             {url: /\/jafa\/api\/foods\/.*/, methods: ['GET']},
             {url: /\/jafa\/api\/foods\/.*\/comment/, methods: ['GET']},
             {url: /\/jafa\/api\/foods\/.*\/score/, methods: ['GET']},
+            {url: /\/jafa\/api\/foods\/.*\/price/, methods: ['GET']},
+            {url: /\/jafa\/api\/recipes\/.*\/price/, methods: ['GET']},
 
             {url: "/jafa/api/foods/:id/score", methods: ['OPTIONS']},
             {url: '/jafa/api/foods/:id/comment', methods: ['OPTIONS']},
