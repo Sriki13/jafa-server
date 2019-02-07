@@ -32,6 +32,10 @@ function InvalidRecipe(id) {
     this.message = "No recipe exists with id " + id;
 }
 
+function NoSuchStore(id) {
+    this.message = "No store exists with id " + id;
+}
+
 module.exports = {
     NoSuchFoodException,
     AttributeIsMissing,
@@ -40,5 +44,6 @@ module.exports = {
     InvalidRecipeIngredient,
     InvalidUserException,
     InvalidOrderException,
-    InvalidRecipe
+    InvalidRecipe,
+    NoSuchStore
 };

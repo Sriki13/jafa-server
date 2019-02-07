@@ -1,10 +1,11 @@
-const express       = require("express");
-const searchRouter  = require("./search.router");
-const scoreRouter   = require("./score.router");
+const express = require("express");
+const searchRouter = require("./search.router");
+const scoreRouter = require("./score.router");
 const commentRouter = require("./comment.router");
 const recipeRouter = require("./recipe.router");
-const userRouter    = require("./user.router");
+const userRouter = require("./user.router");
 const storeRouter = require("./store.router");
+const priceRouter = require("./price.router");
 
 
 const router = express.Router();
@@ -14,6 +15,8 @@ router.get("/foods/:id", searchRouter.getFood);
 router.put("/foods", searchRouter.updateFood);
 router.get("/recipes", searchRouter.searchRecipe);
 
+router.get("/foods/:id/price", priceRouter.fetchFoodPrice);
+router.post("/foods/:id/price", priceRouter.addNewPrice);
 
 router.get("/foods/:id/score", scoreRouter.fetchScore);
 router.post("/foods/:id/score", scoreRouter.createScore);
