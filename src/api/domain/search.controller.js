@@ -58,11 +58,11 @@ async function fetchFood(name, limit, criteria, order, page) {
 }
 
 async function fetchRecipe(name, page) {
-    let foodCollection = await foodModel.getCollection();
-    let count = await foodCollection.count({
+    let recipeCollection = await recipeModel.getCollection();
+    let count = await recipeCollection.count({
         title: {'$regex': name, '$options': 'i'}
     });
-    let data = await foodCollection.find({
+    let data = await recipeCollection.find({
         title: {'$regex': name, '$options': 'i'}
     }, {limit: 20, skip: 20 * (parseInt(page) - 1)}).toArray();
     return {

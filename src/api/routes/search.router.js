@@ -39,6 +39,7 @@ async function searchRecipe(req, res) {
         req.query.page = 1;
     }
     let items = await controller.fetchRecipe(search, req.query.page);
+    console.log(items);
     return res.status(HttpStatus.OK).send(items);
 }
 
