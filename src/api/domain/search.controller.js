@@ -16,6 +16,7 @@ function formatFood(food) {
         images: foodModel.getImagesData(food),
         nutriments: food.nutriments,
         score: food.score,
+        price: food.price
     };
 }
 
