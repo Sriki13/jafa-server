@@ -27,6 +27,7 @@ router.get('/foods/:id/comment', commentRouter.getComments);
 
 router.post("/recipes", recipeRouter.createRecipe);
 router.post("/recipes/:id/ingredients", recipeRouter.setRecipeIngredient);
+router.get("/recipes/:id/price", recipeRouter.getRecipePrice);
 
 router.get("/stores", storeRouter.fetchStores);
 router.get("/stores/:id", storeRouter.fetchStore);

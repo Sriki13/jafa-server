@@ -77,7 +77,8 @@ async function addPrice(foodId, storeId, price) {
     }
     food.prices.push({
         price: price,
-        storeId: ObjectId(storeId)
+        storeId: ObjectId(storeId),
+        date: new Date()
     });
     food.price = getFoodAveragePrice(food);
     await foodModel.getCollection().save(food);

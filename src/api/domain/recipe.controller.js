@@ -50,16 +50,22 @@ async function parseRecipe(recipeText, authorId) {
 async function suggestFoods(ingredients) {
     let result = [];
     for (let ingredient of ingredients) {
-        result.push(await search.fetchFood(ingredient.name, 3).data);
+        let suggestions = await search.fetchFood(ingredient.name, 3, "score", "desc", 1);
+        result.push(suggestions.data);
     }
     return result;
 }
 
-async function updateRecipeIngredient(userId, recipeId, position, foodId) {
-    let recipe = await recipeModel.getCollection().findOne({_id: ObjectId(recipeId)});
+async function findRecipe(id) {
+    let recipe = await recipeModel.getCollection().findOne({_id: ObjectId(id)});
     if (recipe == null) {
-        throw new exceptions.InvalidRecipe(recipeId);
+        throw new exceptions.InvalidRecipe(id);
     }
+    return recipe;
+}
+
+async function updateRecipeIngredient(userId, recipeId, position, foodId) {
+    let recipe = await findRecipe(recipeId);
     if (position > recipe.ingredients.length - 1) {
         throw new exceptions.InvalidRecipeIngredient(position);
     }
@@ -74,10 +80,35 @@ async function updateRecipeIngredient(userId, recipeId, position, foodId) {
     await recipeModel.getCollection().save(recipe);
 }
 
+async function getRecipePrice(recipeId) {
+    let recipe = await findRecipe(recipeId);
+    let sum = 0;
+    let unknown = [];
+    for (let ingredient of recipe.ingredients) {
+        if (ingredient.foodId == null) {
+            unknown.push(ingredient.name);
+        } else {
+            let food = await foodModel.getCollection().findOne({_id: ingredient.foodId});
+            let min;
+            for (let priceItem of food.prices) {
+                if (min === undefined || priceItem.price < min) {
+                    min = priceItem.price;
+                }
+            }
+            sum += min;
+        }
+    }
+    return {
+        sum: sum,
+        unknown: unknown
+    }
+}
+
 module.exports = {
     parseRecipe,
     suggestFoods,
-    updateRecipeIngredient
+    updateRecipeIngredient,
+    getRecipePrice
 };
 
 

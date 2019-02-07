@@ -38,7 +38,21 @@ async function setRecipeIngredient(req, res) {
     }
 }
 
+async function getRecipePrice(req, res) {
+    try {
+        let result = await controller.getRecipePrice(req.params.id);
+        return res.status(HttpStatus.OK).send(result);
+    } catch (e) {
+        if (e instanceof exceptions.InvalidRecipe) {
+            return res.status(HttpStatus.NOT_FOUND).send(e.message);
+        }
+        console.error(e);
+        return res.status(HttpStatus.BAD_REQUEST).send(e.message);
+    }
+}
+
 module.exports = {
     createRecipe,
-    setRecipeIngredient
+    setRecipeIngredient,
+    getRecipePrice
 };
