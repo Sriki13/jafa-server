@@ -2,6 +2,7 @@ const foodModel = require("./models/food");
 const recipeModel = require("./models/recipe");
 const storeModel = require("./models/store");
 const exceptions = require("./exceptions");
+const ObjectId = require('mongodb').ObjectID;
 
 async function getFoodById(id) {
     const foodCollection = await foodModel.getCollection();
@@ -21,8 +22,8 @@ function formatFood(food) {
     };
 }
 
-async function fetchFood(name, limit, criteria, order, page, store, region) {
-    if (store != null && region != null) {
+async function fetchFood(name, limit, criteria, order, page, shop, region) {
+    if (shop != null && region != null) {
         throw new exceptions.InvalidLocationSearch();
     }
     if (limit == null) {
@@ -44,21 +45,25 @@ async function fetchFood(name, limit, criteria, order, page, store, region) {
     if (criteria != null) {
         options.sort = [[criteria, (order === null) ? 'asc' : order]];
     }
-    let foodCollection = await foodModel.getCollection();
+    const foodCollection = await foodModel.getCollection();
+    const storeCollection = await storeModel.getCollection();
     let query = {
-        product_name: {'$regex': name, '$ne': "", '$exists': true, '$options': 'i'}
+        product_name: {$regex: name, $ne: "", $exists: true, $options: 'i'}
     };
-    if (store != null) {
-        let store = await storeModel.getCollection().findOne({_id: store});
+    if (shop != null) {
+        let store = storeCollection.findOne({_id: ObjectId(shop)});
         if (store == null) {
             throw new exceptions.NoSuchStore(store);
         }
-        query.prices = {storeId: store}
+        query.prices = {$elemMatch: {storeId: ObjectId(shop)}};
     }
     if (region != null) {
-        let stores = await storeModel.getCollection().find({region: region}).toArray();
-        let ids = stores.map(store => store.id);
-        query.prices = {storeId: {"$in": ids}}
+        let stores = await storeCollection.find({region: region}).toArray();
+        if (stores.length === 0) {
+            throw new exceptions.InvalidRegion(region);
+        }
+        let ids = stores.map(store => ObjectId(store._id));
+        query.prices = {$elemMatch: {storeId: {$in: ids}}};
     }
     let count = await foodCollection.count(query);
     let foods = await foodCollection.find(query, options).toArray();

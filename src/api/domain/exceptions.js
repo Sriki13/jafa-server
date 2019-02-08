@@ -40,6 +40,10 @@ function InvalidLocationSearch() {
     this.message = "Cannot filter by store and region at the same time";
 }
 
+function InvalidRegion(region) {
+    this.message = "No shop exists in the region " + region;
+}
+
 module.exports = {
     NoSuchFoodException,
     AttributeIsMissing,
@@ -50,5 +54,6 @@ module.exports = {
     InvalidOrderException,
     InvalidRecipe,
     NoSuchStore,
-    InvalidLocationSearch
+    InvalidLocationSearch,
+    InvalidRegion
 };

@@ -1,6 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
 
-
 async function getDatabaseObject() {
     // mongodb://<dbuser>:<dbpassword>@ds159624.mlab.com:59624/jafa
     let host = (process.env.NODE_ENV === 'test')  ? "ds221645.mlab.com" : "ds159624.mlab.com";
