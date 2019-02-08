@@ -35,8 +35,22 @@ async function addStore(name, address, lat, long, region) {
     return store;
 }
 
+async function getAllRegions() {
+    const collection = await storeModel.getCollection();
+    let result = [];
+    let stores = await collection.find({});
+    while (await stores.hasNext()) {
+        let store = await stores.next();
+        if (store.region != null && !result.includes(store.region)) {
+            result.push(store.region);
+        }
+    }
+    return result;
+}
+
 module.exports = {
     getStore,
     searchStore,
-    addStore
+    addStore,
+    getAllRegions
 };

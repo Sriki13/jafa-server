@@ -32,6 +32,7 @@ router.get("/recipes/:id/price", recipeRouter.getRecipePrice);
 router.get("/stores", storeRouter.fetchStores);
 router.get("/stores/:id", storeRouter.fetchStore);
 router.post("/stores", storeRouter.createStore);
+router.get("/regions", storeRouter.fetchRegions);
 
 // Users routes
 router.post('/users/authenticate', userRouter.authenticate);
