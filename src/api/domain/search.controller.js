@@ -1,5 +1,6 @@
 const foodModel = require("./models/food");
 const recipeModel = require("./models/recipe");
+const storeModel = require("./models/store");
 const exceptions = require("./exceptions");
 
 async function getFoodById(id) {
@@ -20,7 +21,10 @@ function formatFood(food) {
     };
 }
 
-async function fetchFood(name, limit, criteria, order, page) {
+async function fetchFood(name, limit, criteria, order, page, store, region) {
+    if (store != null && region != null) {
+        throw new exceptions.InvalidLocationSearch();
+    }
     if (limit == null) {
         limit = 20;
     } else {
@@ -41,12 +45,23 @@ async function fetchFood(name, limit, criteria, order, page) {
         options.sort = [[criteria, (order === null) ? 'asc' : order]];
     }
     let foodCollection = await foodModel.getCollection();
-    let count = await foodCollection.count({
+    let query = {
         product_name: {'$regex': name, '$ne': "", '$exists': true, '$options': 'i'}
-    });
-    let foods = await foodCollection.find({
-        product_name: {'$regex': name, '$ne': "", '$exists': true, '$options': 'i'}
-    }, options).toArray();
+    };
+    if (store != null) {
+        let store = await storeModel.getCollection().findOne({_id: store});
+        if (store == null) {
+            throw new exceptions.NoSuchStore(store);
+        }
+        query.prices = {storeId: store}
+    }
+    if (region != null) {
+        let stores = await storeModel.getCollection().find({region: region}).toArray();
+        let ids = stores.map(store => store.id);
+        query.prices = {storeId: {"$in": ids}}
+    }
+    let count = await foodCollection.count(query);
+    let foods = await foodCollection.find(query, options).toArray();
     let result = [];
     foods.forEach(food => {
         result.push(formatFood(food));

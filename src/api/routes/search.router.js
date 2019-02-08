@@ -13,7 +13,7 @@ async function searchFood(req, res) {
         req.query.page = 1;
     }
     let items = await controller.fetchFood(search, req.query.limit, req.query.criteria,
-        req.query.order, req.query.page);
+        req.query.order, req.query.page, req.query.store, req.query.region);
     return res.status(HttpStatus.OK).send(items);
 }
 
