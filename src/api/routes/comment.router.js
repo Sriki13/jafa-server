@@ -40,7 +40,7 @@ async function getFoodComments(req, res) {
 
 async function getRecipeComments(req, res) {
     let comments = await controller.getRecipeComments(req.params.id);
-    return (comments === null) ? sendNotFoodFoundIdResponse(res, req.params.id) : sendOKResponse(res, comments);
+    return (comments === null) ? sendNotRecipeFoundIdResponse(res, req.params.id) : sendOKResponse(res, comments);
 }
 
 

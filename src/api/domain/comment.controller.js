@@ -27,14 +27,14 @@ async function createComment(id, comment, author, model) {
 }
 
 async function getFoodComments(foodId) {
-   const collection = foodModel.getCollection();
+   const collection = await foodModel.getCollection();
    return await getComments(foodId, collection);
 }
 
 
 async function getRecipeComments(recipeId) {
-    const collection = recipeModel.getCollection();
-    return await getComments(recipeId, collection);
+    const collection = await recipeModel.getCollection();
+    return await getComments(ObjectId(recipeId), collection);
 }
 
 async function getComments(id, collection) {
