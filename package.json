@@ -9,7 +9,7 @@
     "start": "node .",
     "start:dev": "nodemon .",
     "postinstall": "cross-env NODE_ENV=prod npm run apidoc",
-    "test": "cross-env NODE_ENV=test mocha --recursive ",
+    "test": "cross-env NODE_ENV=test mocha --recursive --exit",
     "apidoc": "apidoc -i src/api -o apidoc/"
   },
   "engines": {
