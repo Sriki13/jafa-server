@@ -1,6 +1,8 @@
 const foodModel = require("./models/food");
 const recipeModel = require("./models/recipe");
+const storeModel = require("./models/store");
 const exceptions = require("./exceptions");
+const ObjectId = require('mongodb').ObjectID;
 
 async function getFoodById(id) {
     const foodCollection = await foodModel.getCollection();
@@ -28,7 +30,10 @@ async function updateFood(food) {
     return await collection.findOneAndUpdate({id: food._id}, {$set: food}, {returnNewDocument: true})
 }
 
-async function fetchFood(name, limit, criteria, order, page) {
+async function fetchFood(name, limit, criteria, order, page, shop, region) {
+    if (shop != null && region != null) {
+        throw new exceptions.InvalidLocationSearch();
+    }
     if (limit == null) {
         limit = 20;
     } else {
@@ -48,13 +53,28 @@ async function fetchFood(name, limit, criteria, order, page) {
     if (criteria != null) {
         options.sort = [[criteria, (order === null) ? 'asc' : order]];
     }
-    let foodCollection = await foodModel.getCollection();
-    let count = await foodCollection.count({
-        product_name: {'$regex': name, '$ne': "", '$exists': true, '$options': 'i'}
-    });
-    let foods = await foodCollection.find({
-        product_name: {'$regex': name, '$ne': "", '$exists': true, '$options': 'i'}
-    }, options).toArray();
+    const foodCollection = await foodModel.getCollection();
+    const storeCollection = await storeModel.getCollection();
+    let query = {
+        product_name: {$regex: name, $ne: "", $exists: true, $options: 'i'}
+    };
+    if (shop != null) {
+        let store = storeCollection.findOne({_id: ObjectId(shop)});
+        if (store == null) {
+            throw new exceptions.NoSuchStore(store);
+        }
+        query.prices = {$elemMatch: {storeId: ObjectId(shop)}};
+    }
+    if (region != null) {
+        let stores = await storeCollection.find({region: region}).toArray();
+        if (stores.length === 0) {
+            throw new exceptions.InvalidRegion(region);
+        }
+        let ids = stores.map(store => ObjectId(store._id));
+        query.prices = {$elemMatch: {storeId: {$in: ids}}};
+    }
+    let count = await foodCollection.count(query);
+    let foods = await foodCollection.find(query, options).toArray();
     let result = [];
     foods.forEach(food => {
         result.push(formatFood(food));

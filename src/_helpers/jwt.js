@@ -17,6 +17,8 @@ function jwt() {
             '/jafa/api/users/register',
             '/jafa/api/foods',
             "/jafa/api/stores",
+            "/jafa/api/regions",
+            {url: /apidoc\/.*/, methods: ['GET']},
             {url: "/jafa/api/recipes", methods: ["GET"]},
             {url: "/jafa/api/recipes", methods: ['OPTIONS']},
 

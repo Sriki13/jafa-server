@@ -30,9 +30,14 @@ async function createStore(req, res) {
     ));
 }
 
+async function fetchRegions(req, res) {
+    return res.status(HttpStatus.OK).send(await controller.getAllRegions());
+}
+
 module.exports = {
     fetchStore,
     fetchStores,
-    createStore
+    createStore,
+    fetchRegions
 };
 

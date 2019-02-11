@@ -9,7 +9,4 @@
 * Social aspects - users can post their own recipes into a recipe-space, comment on recipes posted by others etc. 
 * Your app will present a way for users to add price information: price, store, date of entry.
 * determine the price of a given recipe based on the prices of given ingredients
-
-## Functionalities to add :
-* searching for items by price can be limited to a given store, or to all stores within a given region. 
-Store locations can be geolocalized and displayed on a map
+* searching for items by price can be limited to a given store, or to all stores within a given region

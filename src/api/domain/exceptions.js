@@ -36,6 +36,14 @@ function NoSuchStore(id) {
     this.message = "No store exists with id " + id;
 }
 
+function InvalidLocationSearch() {
+    this.message = "Cannot filter by store and region at the same time";
+}
+
+function InvalidRegion(region) {
+    this.message = "No shop exists in the region " + region;
+}
+
 module.exports = {
     NoSuchFoodException,
     AttributeIsMissing,
@@ -45,5 +53,7 @@ module.exports = {
     InvalidUserException,
     InvalidOrderException,
     InvalidRecipe,
-    NoSuchStore
+    NoSuchStore,
+    InvalidLocationSearch,
+    InvalidRegion
 };
