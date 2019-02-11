@@ -6,7 +6,7 @@
   "scripts": {
     "coverage": "LOGGER_LEVEL=fatal NODE_ENV=test nyc _mocha -b",
     "mocha": "NODE_ENV=test _mocha -b",
-    "start": "node .",
+    "start": "apidoc -i src/api -o apidoc/ & node .",
     "start:dev": "nodemon .",
     "postinstall": "cross-env NODE_ENV=prod npm run apidoc",
     "test": "cross-env NODE_ENV=test mocha --recursive --exit",

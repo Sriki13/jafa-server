@@ -1,6 +1,6 @@
 {
     "name": "Jafa api",
-    "description": "'Result-array' means the method returns an array of items containing the data displayed below",
+    "description": "'Result-array' means the method returns an array of items containing the data displayed below. Some requests may require authentication with a token.",
     "template": {
         "withCompare": false,
         "withGenerator": true

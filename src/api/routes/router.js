@@ -27,7 +27,6 @@ router.get('/foods/:id/comment', commentRouter.getFoodComments);
 router.post('/recipes/:id/comment', commentRouter.addRecipeComment);
 router.get('/recipes/:id/comment', commentRouter.getRecipeComments);
 
-
 router.post("/recipes", recipeRouter.createRecipe);
 router.post("/recipes/:id/ingredients", recipeRouter.setRecipeIngredient);
 router.get("/recipes/:id/price", recipeRouter.getRecipePrice);
@@ -40,9 +39,6 @@ router.get("/regions", storeRouter.fetchRegions);
 // Users routes
 router.post('/users/authenticate', userRouter.authenticate);
 router.post('/users/register', userRouter.register);
-router.get('/users/', userRouter.getAll);
-router.get('/users/current', userRouter.getCurrent);
-router.get('/users/:id', userRouter.getById);
 router.put('/users/:id', userRouter.update);
 router.delete('/users/:id', userRouter._delete);
 

@@ -14,6 +14,17 @@ function sendOKResponse(res, object) {
     return res.status(HttpStatus.OK).send(object);
 }
 
+/**
+ * @api {post} jafa/api/foods/:id/comment Add food comments
+ * @apiGroup comment
+ *
+ * @apiParam (URL parameters) {Number} id The id of the food
+ *
+ * @apiParam (Comment) {Number} id The id of the comment
+ * @apiParam (Comment) {String} author The name of the commenter
+ * @apiParam (Comment) {String} message The content of the comment
+ * @apiParam (Comment) {Date} timestamp The date of the comment
+ */
 async function addFoodComment(req, res) {
     if (req.body.message === undefined || req.body.message === null) {
         return res.status(HttpStatus.BAD_REQUEST).send("message undefined");
@@ -23,6 +34,17 @@ async function addFoodComment(req, res) {
     return (food === null) ? sendNotFoodFoundIdResponse(res, req.params.id) : sendOKResponse(res, food);
 }
 
+/**
+ * @api {post} jafa/api/foods/:id/comment Add recipe comments
+ * @apiGroup comment
+ *
+ * @apiParam (URL parameters) {Number} id The id of the recipe
+ *
+ * @apiParam (Comment) {Number} id The id of the comment
+ * @apiParam (Comment) {String} author The name of the commenter
+ * @apiParam (Comment) {String} message The content of the comment
+ * @apiParam (Comment) {Date} timestamp The date of the comment
+ */
 async function addRecipeComment(req, res) {
     if (req.body.message === undefined || req.body.message === null) {
         return res.status(HttpStatus.BAD_REQUEST).send("message undefined");
@@ -32,12 +54,37 @@ async function addRecipeComment(req, res) {
     return (recipe === null) ? sendNotRecipeFoundIdResponse(res, req.params.id) : sendOKResponse(res, recipe);
 }
 
-
+/**
+ * @api {get} jafa/api/foods/:id/comment Get food comments
+ * @apiGroup comment
+ *
+ * @apiParam (URL parameters) {Number} id The id of the food
+ *
+ * @apiSuccess {Array} Result-array An array of comments
+ *
+ * @apiSuccess (Comment) {Number} id The id of the comment
+ * @apiSuccess (Comment) {String} author The name of the commenter
+ * @apiSuccess (Comment) {String} message The content of the comment
+ * @apiSuccess (Comment) {Date} timestamp The date of the comment
+ */
 async function getFoodComments(req, res) {
     let comments = await controller.getFoodComments(req.params.id);
     return (comments === null) ? sendNotFoodFoundIdResponse(res, req.params.id) : sendOKResponse(res, comments);
 }
 
+/**
+ * @api {get} jafa/api/recipes/:id/comment Get recipe comments
+ * @apiGroup comment
+ *
+ * @apiParam (URL parameters) {Number} id The id of the recipe
+ *
+ * @apiSuccess {Array} Result-array An array of comments
+ *
+ * @apiSuccess (Comment) {Number} id The id of the comment
+ * @apiSuccess (Comment) {String} author The name of the commenter
+ * @apiSuccess (Comment) {String} message The content of the comment
+ * @apiSuccess (Comment) {Date} timestamp The date of the comment
+ */
 async function getRecipeComments(req, res) {
     let comments = await controller.getRecipeComments(req.params.id);
     return (comments === null) ? sendNotRecipeFoundIdResponse(res, req.params.id) : sendOKResponse(res, comments);

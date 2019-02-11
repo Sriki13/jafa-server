@@ -6,8 +6,6 @@ const ObjectId = require('mongodb').ObjectID;
 
 module.exports = {
     authenticate,
-    getAll,
-    getById,
     create,
     update,
     delete: _delete
@@ -24,16 +22,6 @@ async function authenticate({username, password}) {
             token
         };
     }
-}
-
-async function getAll() {
-    const collection = await userModel.getCollection();
-    return await collection.find().project({hash: 0}).toArray();
-}
-
-async function getById(id) {
-    const collection = await userModel.getCollection();
-    return await collection.findOne({_id: ObjectId(id)});
 }
 
 async function create(userParam) {
