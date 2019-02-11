@@ -21,8 +21,11 @@ router.post("/foods/:id/price", priceRouter.addNewPrice);
 router.get("/foods/:id/score", scoreRouter.fetchScore);
 router.post("/foods/:id/score", scoreRouter.createScore);
 
-router.post('/foods/:id/comment', commentRouter.addComment);
-router.get('/foods/:id/comment', commentRouter.getComments);
+router.post('/foods/:id/comment', commentRouter.addFoodComment);
+router.get('/foods/:id/comment', commentRouter.getFoodComments);
+
+router.post('/recipes/:id/comment', commentRouter.addRecipeComment);
+router.get('/recipes/:id/comment', commentRouter.getRecipeComments);
 
 
 router.post("/recipes", recipeRouter.createRecipe);

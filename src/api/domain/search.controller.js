@@ -20,6 +20,14 @@ function formatFood(food) {
     };
 }
 
+async function updateFood(food) {
+    if ('undefined' === typeof(food['_id'])) {
+        throw "Food object must have 'id' attribute"
+    }
+    const collection = await foodModel.getCollection();
+    return await collection.findOneAndUpdate({id: food._id}, {$set: food}, {returnNewDocument: true})
+}
+
 async function fetchFood(name, limit, criteria, order, page) {
     if (limit == null) {
         limit = 20;
@@ -74,5 +82,6 @@ async function fetchRecipe(name, page) {
 module.exports = {
     fetchFood,
     fetchRecipe,
-    getFoodById
+    getFoodById,
+    updateFood,
 };

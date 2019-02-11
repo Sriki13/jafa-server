@@ -39,6 +39,12 @@ async function getScore(id) {
     return getAverageScore(food);
 }
 
+async function setAllSCore() {
+    const collection = await foodModel.getCollection();
+    let allFoods = await collection.find({});
+    await allFoods.forEach(async food => await checkIfScoreIsDefined(food));
+}
+
 async function addScore(id, score) {
     const collection = await foodModel.getCollection();
     score = parseFloat(score);
@@ -51,5 +57,6 @@ async function addScore(id, score) {
 
 module.exports = {
     getScore,
-    addScore
+    addScore,
+    setAllSCore,
 };

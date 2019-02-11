@@ -9,7 +9,7 @@
     "start": "node .",
     "start:dev": "nodemon .",
     "postinstall": "cross-env NODE_ENV=prod npm run apidoc",
-    "test": "cross-env NODE_ENV=test mocha --recursive --exit",
+    "test": "cross-env NODE_ENV=test mocha --recursive ",
     "apidoc": "apidoc -i src/api -o apidoc/"
   },
   "engines": {
@@ -33,7 +33,7 @@
     "nyc": "^13.1.0",
     "sinon": "^2.3.2",
     "sinon-chai": "2.13.0",
-    "supertest": "3.0.0"
+    "supertest": "^3.0.0"
   },
   "dependencies": {
     "apidoc": "^0.17.7",
@@ -52,6 +52,7 @@
     "jsonwebtoken": "^8.4.0",
     "moment": "2.19.3",
     "mongodb": "2.2.24",
+    "node-fetch": "^2.3.0",
     "pg": "^7.5.0",
     "socket.io": "2.0.4"
   }

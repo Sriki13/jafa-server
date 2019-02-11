@@ -99,11 +99,13 @@ function getImagesData(food) {
     return result;
 }
 
-async function updateFood(food) {
+async function update(food) {
     if (food._id == null) {
         throw "Food object must have 'id' attribute";
     }
-    return await getCollection().findOneAndUpdate({id: food._id}, {$set: food}, {new: true});
+
+    const collection = await getCollection();
+    return await collection.findOneAndUpdate({id: food._id}, {$set: food}, {returnOriginal: false});
 }
 
 async function getCollection() {
@@ -115,5 +117,5 @@ module.exports = {
     getImagesData,
     assignInitialScore,
     getCollection,
-    updateFood
+    update,
 };

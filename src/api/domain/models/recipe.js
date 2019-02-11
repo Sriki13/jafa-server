@@ -24,6 +24,19 @@ async function getCollection() {
     return db.collection("recipes");
 }
 
+
+async function update(recipe) {
+    if (recipe._id == null) {
+        throw "Recipe object must have 'id' attribute";
+    }
+
+    console.log("######## 3 ###########");
+    console.log(recipe);
+    const collection = await getCollection();
+    return await collection.findOneAndUpdate({id: recipe._id}, {$set: recipe}, {returnOriginal: false});
+}
+
 module.exports = {
-    getCollection
+    getCollection,
+    update
 };

@@ -1,30 +1,56 @@
 const foodModel = require("./models/food");
+const recipeModel = require('./models/recipe');
+const ObjectId = require('mongodb').ObjectID;
 
-async function createComment(foodId, comment, author) {
-    const collection = await foodModel.getCollection();
-    let food = await collection.findOne({_id: foodId});
-    if (!food) {
+async function createFoodComment(foodId, comment, author) {
+    return await createComment(foodId, comment, author, foodModel);
+}
+
+async function createRecipeComment(recipeId, comment, author) {
+    return await createComment(ObjectId(recipeId), comment, author, recipeModel)
+}
+
+async function createComment(id, comment, author, model) {
+    const collection = await model.getCollection();
+    let objectToComment = await collection.findOne({_id: id});
+    console.log("######## 1 ###########");
+    console.log(objectToComment);
+    if (!objectToComment) {
         return null;
     }
     comment.author = author;
     comment.timestamp = (new Date).getTime();
-    if (food.comments == null) {
-        food.comments = [];
+    if (objectToComment.comments == null) {
+        objectToComment.comments = [];
     }
-    food.comments.push(comment);
-    return await foodModel.updateFood(food);
+    objectToComment.comments.push(comment);
+    console.log("######## 2 ###########");
+    console.log(objectToComment);
+    return await model.update(objectToComment);
 }
 
-async function getComments(foodId) {
-    const collection = await foodModel.getCollection();
-    let food = await collection.findOne({_id: foodId});
-    if (!food) {
+async function getFoodComments(foodId) {
+   const collection = foodModel.getCollection();
+   return await getComments(foodId, collection);
+}
+
+
+async function getRecipeComments(recipeId) {
+    const collection = recipeModel.getCollection();
+    return await getComments(recipeId, collection);
+}
+
+async function getComments(id, collection) {
+    let item = await collection.findOne({_id: id});
+    if (!item) {
         return null;
     }
-    return food.comments;
+    return item.comments;
 }
 
 module.exports = {
-    createComment,
-    getComments,
+    createFoodComment,
+    createRecipeComment,
+    getFoodComments,
+    getRecipeComments,
 };
