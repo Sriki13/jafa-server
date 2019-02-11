@@ -13,8 +13,6 @@ async function createRecipeComment(recipeId, comment, author) {
 async function createComment(id, comment, author, model) {
     const collection = await model.getCollection();
     let objectToComment = await collection.findOne({_id: id});
-    console.log("######## 1 ###########");
-    console.log(objectToComment);
     if (!objectToComment) {
         return null;
     }
@@ -24,9 +22,8 @@ async function createComment(id, comment, author, model) {
         objectToComment.comments = [];
     }
     objectToComment.comments.push(comment);
-    console.log("######## 2 ###########");
-    console.log(objectToComment);
-    return await model.update(objectToComment);
+    let response = await model.update(objectToComment);
+    return response;
 }
 
 async function getFoodComments(foodId) {
