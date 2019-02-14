@@ -1,5 +1,6 @@
 var assert = require('assert');
 const Food = require('../../../src/api/domain/models/food');
+const Store = require('../../../src/api/domain/models/store');
 const app = require('../../../src/app');
 const request = require('supertest');
 
@@ -25,8 +26,11 @@ describe('search.controller.js', function () {
 
 
     beforeEach(async () => {
-        let collection = await Food.getCollection();
-        await collection.remove({});
+        let models = [Food, Store];
+        models.forEach(async function(model) {
+            let collection = await model.getCollection();
+            await collection.remove({});
+        });
     });
 
 
@@ -70,6 +74,64 @@ describe('search.controller.js', function () {
             await request.agent(app.server)
                 .get('/jafa/api/foods')
                 .query({order: "desc"})
+                .expect(200, {data: [], count: 0});
+        });
+
+        it('should return 400 (bad request) if region is not known', async function() {
+            await request.agent(app.server)
+                .get('/jafa/api/foods')
+                .query({region: "anything"})
+                .expect(400);
+            let collectionStore = await Store.getCollection();
+            let collectionFood = await Store.getCollection();
+            let store = {
+                name: "Carrefour Antibes",
+                address: "Chemin de Saint-Claude, 06600 Antibes",
+                lat: "43.60352179511596",
+                long: "7.088536031822969",
+                region: "PACA"
+            };
+            await collectionStore.insert(store);
+            await collectionFood.insert({_id: 1, product_name: "tacos one meal", "prices": [
+                    {
+                        "price": 16.55602801531245,
+                        "storeId": {
+                            "oid": store._id
+                        }
+                    }
+                ]});
+            await request.agent(app.server)
+                .get('/jafa/api/foods')
+                .query({region: "PACA"})
+                .expect(200, {data: [], count: 0});
+        });
+
+        it('should return 400 (bad request) if store is not known', async function() {
+            await request.agent(app.server)
+                .get('/jafa/api/foods')
+                .query({shop: "anything"})
+                .expect(400);
+            let collectionStore = await Store.getCollection();
+            let collectionFood = await Store.getCollection();
+            let store = {
+                name: "Carrefour Antibes",
+                address: "Chemin de Saint-Claude, 06600 Antibes",
+                lat: "43.60352179511596",
+                long: "7.088536031822969",
+                region: "PACA"
+            };
+            await collectionStore.insert(store);
+            await collectionFood.insert({_id: 1, product_name: "tacos one meal", "prices": [
+                    {
+                        "price": 16.55602801531245,
+                        "storeId": {
+                            "oid": store._id
+                        }
+                    }
+                ]});
+            await request.agent(app.server)
+                .get('/jafa/api/foods')
+                .query({shop: store._id.toString()})
                 .expect(200, {data: [], count: 0});
         });
 
