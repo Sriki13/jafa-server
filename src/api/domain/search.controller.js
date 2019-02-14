@@ -38,7 +38,8 @@ async function updateFood(food) {
         throw "Food object must have 'id' attribute"
     }
     const collection = await foodModel.getCollection();
-    return await collection.findOneAndUpdate({id: food._id}, {$set: food}, {returnNewDocument: true})
+    let result = await collection.findOneAndUpdate({_id: food._id}, {$set: food}, {returnOriginal: false});
+    return result.value;
 }
 
 async function fetchFood(name, limit, criteria, order, page, shop, region) {
