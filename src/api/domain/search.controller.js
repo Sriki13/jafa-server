@@ -10,7 +10,7 @@ async function getFoodById(id) {
     return (food === null) ? null : formatFood(food);
 }
 
-function formatFood(food) {
+function formatFood(food, shop) {
     return {
         id: food._id,
         name: food.product_name,
@@ -18,8 +18,19 @@ function formatFood(food) {
         images: foodModel.getImagesData(food),
         nutriments: food.nutriments,
         score: food.score,
-        price: food.price
+        price: formatPrice(food, shop)
     };
+}
+
+function formatPrice(food, shop) {
+    if (shop == null) {
+        return food.price;
+    }
+    for (let price of food.prices) {
+        if (price.storeId === ObjectId(shop)) {
+            return price.price;
+        }
+    }
 }
 
 async function updateFood(food) {
@@ -77,7 +88,7 @@ async function fetchFood(name, limit, criteria, order, page, shop, region) {
     let foods = await foodCollection.find(query, options).toArray();
     let result = [];
     foods.forEach(food => {
-        result.push(formatFood(food));
+        result.push(formatFood(food, shop));
     });
     return {
         data: result,
