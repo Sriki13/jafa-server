@@ -42,7 +42,7 @@ async function getComments(id, collection) {
     if (!item) {
         return null;
     }
-    return item.comments;
+    return (item.comments === null || item.comments === undefined) ? [] : item.comments;
 }
 
 module.exports = {
