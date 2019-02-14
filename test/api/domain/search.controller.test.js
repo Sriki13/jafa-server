@@ -6,7 +6,7 @@ const SearchController = require('../../../src/api/domain/search.controller');
 
 describe('search.controller.js', function () {
 
-    this.timeout(10000);
+    this.timeout(20000);
 
 
     beforeEach(async () => {
