@@ -1,5 +1,6 @@
 const controller = require("../domain/search.controller");
 const HttpStatus = require("http-status-codes");
+const ObjectId = require('mongodb').ObjectID;
 
 /**
  * @api {get} jafa/api/foods Search foods
@@ -63,7 +64,7 @@ async function searchFood(req, res) {
 }
 
 /**
- * @api {post} jafa/api/foods Update food
+ * @api {put} jafa/api/foods Update food
  * @apiGroup search
  *
  * @apiDescription Adds a new food to the database.
@@ -71,18 +72,24 @@ async function searchFood(req, res) {
  *
  * @apiParam (Body) {Number} id The id of the food
  * @apiParam (Body) {Anything} ___ Any field to add to the food in the database.
+ *
+ * @apiSuccess {Number} id The id of the food
+ * @apiSuccess {Anything} ___ Any field present in the food.
  */
 async function updateFood(req, res) {
     try {
+        if (req.body._id == null) {
+            return res.status(HttpStatus.BAD_REQUEST).send("id must be defined");
+        }
         let updatedFood = await controller.updateFood(req.body);
         return res.status(HttpStatus.OK).send(updatedFood)
     } catch (err) {
-        return res.status(HttpStatus.BAD_REQUEST).send()
+        return res.status(HttpStatus.BAD_REQUEST).send(err)
     }
 }
 
 /**
- * @api {post} jafa/api/recipes Browse recipe
+ * @api {get} jafa/api/recipes Browse recipe
  * @apiGroup search
  *
  * @apiParam (Query parameters) {String} name A string contained in the name of the item, defaults to an empty string
@@ -108,14 +115,14 @@ async function searchRecipe(req, res) {
     if (req.query.name !== undefined) {
         search = req.query.name;
     }
-    if (req.query.page != null && !isNaN(req.query.page) && req.query.page < 1) {
-        return res.status(HttpStatus.BAD_GATEWAY).send("Page must be a number greater or equal to 1");
+    if ((req.query.page != null && !isNaN(req.query.page) && req.query.page < 1)
+        || isNaN(req.query.page)) {
+        return res.status(HttpStatus.BAD_REQUEST).send("Page must be a number greater or equal to 1");
     }
     if (req.query.page == null) {
         req.query.page = 1;
     }
     let items = await controller.fetchRecipe(search, req.query.page);
-    console.log(items);
     return res.status(HttpStatus.OK).send(items);
 }
 

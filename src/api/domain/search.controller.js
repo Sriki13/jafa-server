@@ -35,7 +35,7 @@ function formatPrice(food, shop) {
 
 async function updateFood(food) {
     if ('undefined' === typeof(food['_id'])) {
-        throw "Food object must have 'id' attribute"
+        throw "Food object must have '_id' attribute"
     }
     const collection = await foodModel.getCollection();
     let result = await collection.findOneAndUpdate({_id: food._id}, {$set: food}, {returnOriginal: false});

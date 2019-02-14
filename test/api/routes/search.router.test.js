@@ -1,8 +1,9 @@
-var assert = require('assert');
 const Food = require('../../../src/api/domain/models/food');
 const Store = require('../../../src/api/domain/models/store');
+const Recipe = require('../../../src/api/domain/models/recipe');
 const app = require('../../../src/app');
 const request = require('supertest');
+const ObjectId = require('mongodb').ObjectID;
 
 
 describe('search.controller.js', function () {
@@ -26,8 +27,8 @@ describe('search.controller.js', function () {
 
 
     beforeEach(async () => {
-        let models = [Food, Store];
-        models.forEach(async function(model) {
+        let models = [Food, Store, Recipe];
+        models.forEach(async function (model) {
             let collection = await model.getCollection();
             await collection.remove({});
         });
@@ -50,23 +51,23 @@ describe('search.controller.js', function () {
         });
 
 
-        it('should return 400 (bad request) if page number is less than 1', async function() {
+        it('should return 400 (bad request) if page number is less than 1', async function () {
             await request.agent(app.server)
                 .get('/jafa/api/foods')
-                .query({ page: 0 })
+                .query({page: 0})
                 .expect(400);
             await request.agent(app.server)
                 .get('/jafa/api/foods')
-                .query({ page: 1 })
+                .query({page: 1})
                 .expect('Content-Type', /json/)
                 .expect(200, {data: [], count: 0});
         });
 
-        it('should return 400 (bad request) if order is different from "asc" or "desc"', async function() {
-           await request.agent(app.server)
-               .get('/jafa/api/foods')
-               .query({order: "anything"})
-               .expect(400);
+        it('should return 400 (bad request) if order is different from "asc" or "desc"', async function () {
+            await request.agent(app.server)
+                .get('/jafa/api/foods')
+                .query({order: "anything"})
+                .expect(400);
             await request.agent(app.server)
                 .get('/jafa/api/foods')
                 .query({order: "asc"})
@@ -77,64 +78,123 @@ describe('search.controller.js', function () {
                 .expect(200, {data: [], count: 0});
         });
 
-        it('should return 400 (bad request) if region is not known', async function() {
+
+        it('should return 400 (bad request) if region is not known', async function () {
             await request.agent(app.server)
                 .get('/jafa/api/foods')
                 .query({region: "anything"})
                 .expect(400);
-            let collectionStore = await Store.getCollection();
-            let collectionFood = await Store.getCollection();
-            let store = {
-                name: "Carrefour Antibes",
-                address: "Chemin de Saint-Claude, 06600 Antibes",
-                lat: "43.60352179511596",
-                long: "7.088536031822969",
-                region: "PACA"
-            };
-            await collectionStore.insert(store);
-            await collectionFood.insert({_id: 1, product_name: "tacos one meal", "prices": [
+        });
+
+        const testStore = {
+            name: "Carrefour Antibes",
+            address: "Chemin de Saint-Claude, 06600 Antibes",
+            lat: "43.60352179511596",
+            long: "7.088536031822969",
+            region: "PACA"
+        };
+
+        function createFoodWithPrice(storeId) {
+            return {
+                _id: 1, product_name: "tacos one meal", "prices": [
                     {
                         "price": 16.55602801531245,
-                        "storeId": {
-                            "oid": store._id
-                        }
+                        "storeId": ObjectId(storeId)
                     }
-                ]});
+                ]
+            }
+        }
+
+        it("should return the correct foods if a region is known", async () => {
+            let collectionStore = await Store.getCollection();
+            let collectionFood = await Food.getCollection();
+            await collectionStore.insert(testStore);
+            let testFood = createFoodWithPrice(testStore._id);
+            await collectionFood.insert(testFood);
             await request.agent(app.server)
                 .get('/jafa/api/foods')
                 .query({region: "PACA"})
-                .expect(200, {data: [], count: 0});
+                .expect(200, {
+                    data: [{
+                        "id": 1,
+                        "images": [],
+                        "name": "tacos one meal"
+                    }],
+                    count: 1
+                });
         });
 
-        it('should return 400 (bad request) if store is not known', async function() {
+        it('should return 400 (bad request) if store is not known', async function () {
             await request.agent(app.server)
                 .get('/jafa/api/foods')
                 .query({shop: "anything"})
                 .expect(400);
-            let collectionStore = await Store.getCollection();
-            let collectionFood = await Store.getCollection();
-            let store = {
-                name: "Carrefour Antibes",
-                address: "Chemin de Saint-Claude, 06600 Antibes",
-                lat: "43.60352179511596",
-                long: "7.088536031822969",
-                region: "PACA"
-            };
-            await collectionStore.insert(store);
-            await collectionFood.insert({_id: 1, product_name: "tacos one meal", "prices": [
-                    {
-                        "price": 16.55602801531245,
-                        "storeId": {
-                            "oid": store._id
-                        }
-                    }
-                ]});
-            await request.agent(app.server)
-                .get('/jafa/api/foods')
-                .query({shop: store._id.toString()})
-                .expect(200, {data: [], count: 0});
         });
 
+        it("should return the correct food if a store is known", async () => {
+            let collectionStore = await Store.getCollection();
+            let collectionFood = await Food.getCollection();
+            await collectionStore.insert(testStore);
+            let testFood = createFoodWithPrice(testStore._id);
+            await collectionFood.insert(testFood);
+            await request.agent(app.server)
+                .get('/jafa/api/foods')
+                .query({shop: testStore._id.toString()})
+                .expect(200, {
+                    data: [{
+                        "id": 1,
+                        "images": [],
+                        "name": "tacos one meal"
+                    }],
+                    count: 1
+                });
+        })
+
+    });
+
+    describe("PUT /foods", () => {
+        it("should return 400 if trying to update food without id", async () => {
+            await request.agent(app.server)
+                .put("/jafa/api/foods")
+                .send({product_name: "whatever"})
+                .expect(400);
+        });
+        it("should return the edited food with 200", async () => {
+            const foodCollection = await Food.getCollection();
+            await foodCollection.insert({_id: "salut", product_name: "whatever"});
+            await request.agent(app.server)
+                .put("/jafa/api/foods")
+                .send({_id: "salut", product_name: "new"})
+                .expect({_id: "salut", product_name: "new"});
+        });
+    });
+
+    describe("GET /recipes", () => {
+        it("should return 400 with an invalid page", async () => {
+            await request.agent(app.server)
+                .get("/jafa/api/recipes")
+                .query({page: -1})
+                .expect(400);
+            await request.agent(app.server)
+                .get("/jafa/api/recipes")
+                .query({page: "lol"})
+                .expect(400);
+        });
+
+        it("should return available recipes", async () => {
+            const recipeCollection = await Recipe.getCollection();
+            let testRecipe = {
+                _id: 1,
+                title: "salut",
+                authorId: 5,
+                ingredients: [],
+                comments: [],
+            };
+            await recipeCollection.insert(testRecipe);
+            await request.agent(app.server)
+                .get("/jafa/api/recipes")
+                .expect({data: [testRecipe], count: 1});
+        })
     });
 
 
