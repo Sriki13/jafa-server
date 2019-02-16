@@ -1,15 +1,12 @@
-var assert = require('assert');
-const database = require('../../../src/_helpers/database');
+const assert = require('assert');
 const Food = require('../../../src/api/domain/models/food');
 const Recipe = require('../../../src/api/domain/models/recipe');
 const SearchController = require('../../../src/api/domain/search.controller');
-const RecipeController = require('../../../src/api/domain/recipe.controller');
 
 
 describe('search.controller.js', function () {
 
     this.timeout(20000);
-
 
     beforeEach(async () => {
         let models = [Food, Recipe];

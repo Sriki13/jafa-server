@@ -1,6 +1,6 @@
 const controller = require("../domain/comment.controller");
 const HttpStatus = require("http-status-codes");
-
+const ObjectId = require('mongodb').ObjectID;
 
 function sendNotFoodFoundIdResponse(res, id) {
     return res.status(HttpStatus.BAD_REQUEST).send("No food found for " + id + " id");
@@ -28,7 +28,7 @@ async function addFoodComment(req, res) {
     }
 
     let food = await controller.createFoodComment(req.params.id, req.body, req.decoded_user);
-    return (food === null) ? sendNotFoodFoundIdResponse(res, req.params.id) : sendOKResponse(res, food);
+    return (food == null) ? sendNotFoodFoundIdResponse(res, req.params.id) : sendOKResponse(res, food);
 }
 
 /**
@@ -43,9 +43,12 @@ async function addRecipeComment(req, res) {
     if (req.body.message == null) {
         return res.status(HttpStatus.BAD_REQUEST).send("message undefined");
     }
-
+    if (!ObjectId.isValid(req.params.id)) {
+        sendNotRecipeFoundIdResponse(res, req.params.id);
+        return;
+    }
     let recipe = await controller.createRecipeComment(req.params.id, req.body, req.decoded_user);
-    return (recipe === null) ? sendNotRecipeFoundIdResponse(res, req.params.id) : sendOKResponse(res, recipe);
+    return (recipe == null) ? sendNotRecipeFoundIdResponse(res, req.params.id) : sendOKResponse(res, recipe);
 }
 
 /**
@@ -80,6 +83,10 @@ async function getFoodComments(req, res) {
  * @apiSuccess (Comment) {Date} timestamp The date of the comment
  */
 async function getRecipeComments(req, res) {
+    if (!ObjectId.isValid(req.params.id)) {
+        sendNotRecipeFoundIdResponse(res, req.params.id);
+        return;
+    }
     let comments = await controller.getRecipeComments(req.params.id);
     return (comments === null) ? sendNotRecipeFoundIdResponse(res, req.params.id) : sendOKResponse(res, comments);
 }

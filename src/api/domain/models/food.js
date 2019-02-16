@@ -105,7 +105,7 @@ async function update(food) {
     }
 
     const collection = await getCollection();
-    return await collection.findOneAndUpdate({id: food._id}, {$set: food}, {returnOriginal: false});
+    return await collection.save(food);
 }
 
 async function getCollection() {

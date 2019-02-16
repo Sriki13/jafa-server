@@ -1,5 +1,3 @@
-const ObjectId = require('mongodb').ObjectID;
-
 // Kept here as reference
 // noinspection JSUnusedLocalSymbols
 const recipeSchema = {
@@ -33,7 +31,7 @@ async function update(recipe) {
     }
 
     const collection = await getCollection();
-    return await collection.findOneAndUpdate({_id: ObjectId(recipe._id)}, {$set: recipe}, {returnOriginal: false});
+    return await collection.save(recipe);
 }
 
 module.exports = {

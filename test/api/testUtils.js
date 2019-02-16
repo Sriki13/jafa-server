@@ -4,6 +4,7 @@ const ObjectId = require('mongodb').ObjectID;
 const jwt = require('jsonwebtoken');
 
 const User = require('../../src/api/domain/models/user');
+const Food = require('../../src/api/domain/models/food');
 
 function sleep(ms) {
     return new Promise(resolve => {
@@ -41,8 +42,15 @@ async function setupTestUser(user) {
     return jwt.sign({sub: user._id}, config.secret);
 }
 
+async function insert(model, item) {
+    let collection = await model.getCollection();
+    await collection.save(item);
+}
+
 module.exports = {
     setupApp,
     cleanCollections,
-    setupTestUser
+    setupTestUser,
+    insert,
+    sleep
 };
