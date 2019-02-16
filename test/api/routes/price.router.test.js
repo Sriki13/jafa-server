@@ -28,7 +28,8 @@ describe('price.router.js', function () {
         await testUtils.cleanCollections([Food]);
     });
 
-    const testStoreId = ObjectId("5c59baab0a8ddf0016bfbb3d");
+    const testStoreStringId = "5c59baab0a8ddf0016bfbb3d";
+    const testStoreId = ObjectId(testStoreStringId);
     const testStore = {
         _id: testStoreId,
         name: "Casino supermarché St Philippe",
@@ -44,7 +45,7 @@ describe('price.router.js', function () {
         _id: foodWithPriceId,
         product_name: "whatever",
         prices: [{price: 12, storeId: testStoreId}],
-        price: 12
+        price: 19
     };
     const foodWithoutPrice = {_id: foodWithoutPriceId, product_name: "whatever", prices: []};
 
@@ -62,7 +63,7 @@ describe('price.router.js', function () {
                 .get("/jafa/api/foods/" + foodWithPriceId + "/price")
                 .expect(200);
             let data = JSON.parse(res.text);
-            assert.strictEqual(data[0].price, 12);
+            assert.strictEqual(data[0].price, foodWithPrice.price);
             assert.strictEqual(data[0].store.name, testStore.name);
         });
 
@@ -72,6 +73,66 @@ describe('price.router.js', function () {
                 .get("/jafa/api/foods/" + foodWithoutPriceId + "/price")
                 .expect(200, []);
         });
+
+    });
+
+    describe("POST jafa/api/foods/:id/price", () => {
+
+        it("should 401 without a token", async () => {
+            await request.agent(app.server)
+                .post("/jafa/api/foods/nope/price")
+                .send({price: 15, storeId: testStoreStringId})
+                .expect(401);
+        });
+
+        it("should 404 if the food does not exist", async () => {
+            await request.agent(app.server)
+                .post("/jafa/api/foods/nope/price")
+                .set("Authorization", "bearer " + token)
+                .send({price: 15, storeId: testStoreStringId})
+                .expect(404);
+        });
+
+        it("should 400 if the store does not exist", async () => {
+            await testUtils.insert(Food, foodWithoutPrice);
+            await request.agent(app.server)
+                .post("/jafa/api/foods/" + foodWithoutPriceId + "/price")
+                .set("Authorization", "bearer " + token)
+                .send({price: 15, storeId: "salut"})
+                .expect(400);
+        });
+
+        it("should 400 if missing params", async () => {
+            await testUtils.insert(Food, foodWithoutPrice);
+            await request.agent(app.server)
+                .post("/jafa/api/foods/" + foodWithoutPriceId + "/price")
+                .set("Authorization", "bearer " + token)
+                .send({})
+                .expect(400);
+            await request.agent(app.server)
+                .post("/jafa/api/foods/" + foodWithoutPriceId + "/price")
+                .set("Authorization", "bearer " + token)
+                .send({price: 15})
+                .expect(400);
+            await request.agent(app.server)
+                .post("/jafa/api/foods/" + foodWithoutPriceId + "/price")
+                .set("Authorization", "bearer " + token)
+                .send({storeId: testStoreStringId})
+                .expect(400);
+        });
+
+        it("should add the new price", async () => {
+            await testUtils.insert(Food, foodWithoutPrice);
+            await request.agent(app.server)
+                .post("/jafa/api/foods/" + foodWithoutPriceId + "/price")
+                .set("Authorization", "bearer " + token)
+                .send({price: 15, storeId: testStoreStringId})
+                .expect(200);
+            let foodCollection = await Food.getCollection();
+            let food = await foodCollection.findOne({_id: foodWithoutPriceId});
+            assert.strictEqual(food.prices.length, 1);
+        });
+
 
     });
 

@@ -38,6 +38,9 @@ async function fetchFoodPrice(req, res) {
  */
 async function addNewPrice(req, res) {
     try {
+        if (req.body.price == null || req.body.storeId == null) {
+            return res.status(HttpStatus.BAD_REQUEST).send("Price and storeId required");
+        }
         await controller.addPrice(req.params.id, req.body.storeId, req.body.price);
         return res.status(HttpStatus.OK).send();
     } catch (e) {

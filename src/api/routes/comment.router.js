@@ -18,6 +18,8 @@ function sendOKResponse(res, object) {
  * @api {post} jafa/api/foods/:id/comment Add food comments
  * @apiGroup comment
  *
+ * @apiDescription User token required.
+ *
  * @apiParam (URL parameters) {Number} id The id of the food
  *
  * @apiParam {String} message The content of the comment
@@ -34,6 +36,8 @@ async function addFoodComment(req, res) {
 /**
  * @api {post} jafa/api/foods/:id/comment Add recipe comments
  * @apiGroup comment
+ *
+ * @apiDescription User token required.
  *
  * @apiParam (URL parameters) {Number} id The id of the recipe
  *
