@@ -1,37 +1,26 @@
+const request = require('supertest');
+const ObjectId = require('mongodb').ObjectID;
+
 const Food = require('../../../src/api/domain/models/food');
 const Store = require('../../../src/api/domain/models/store');
 const Recipe = require('../../../src/api/domain/models/recipe');
 const app = require('../../../src/app');
-const request = require('supertest');
-const ObjectId = require('mongodb').ObjectID;
+const testUtils = require("./../testUtils");
 
-
-describe('search.controller.js', function () {
+describe('search.router.js', function () {
 
     this.timeout(10000);
 
-    function sleep(ms) {
-        return new Promise(resolve => {
-            setTimeout(resolve, ms)
-        })
-    }
-
     before(async () => {
-        await app.start();
-        await sleep(1000);
+        await testUtils.setupApp();
     });
 
     after(async () => {
         await app.stop();
     });
 
-
     beforeEach(async () => {
-        let models = [Food, Store, Recipe];
-        models.forEach(async function (model) {
-            let collection = await model.getCollection();
-            await collection.remove({});
-        });
+        await testUtils.cleanCollections([Food, Store, Recipe]);
     });
 
 
@@ -51,7 +40,7 @@ describe('search.controller.js', function () {
         });
 
 
-        it('should return 400 (bad request) if page number is less than 1', async function () {
+        it('should return 400 if page number is less than 1', async function () {
             await request.agent(app.server)
                 .get('/jafa/api/foods')
                 .query({page: 0})
@@ -63,7 +52,7 @@ describe('search.controller.js', function () {
                 .expect(200, {data: [], count: 0});
         });
 
-        it('should return 400 (bad request) if order is different from "asc" or "desc"', async function () {
+        it('should return 400 if order is different from "asc" or "desc"', async function () {
             await request.agent(app.server)
                 .get('/jafa/api/foods')
                 .query({order: "anything"})
@@ -79,7 +68,7 @@ describe('search.controller.js', function () {
         });
 
 
-        it('should return 400 (bad request) if region is not known', async function () {
+        it('should return 400 if region is not known', async function () {
             await request.agent(app.server)
                 .get('/jafa/api/foods')
                 .query({region: "anything"})
@@ -124,7 +113,7 @@ describe('search.controller.js', function () {
                 });
         });
 
-        it('should return 400 (bad request) if store is not known', async function () {
+        it('should return 400 if store is not known', async function () {
             await request.agent(app.server)
                 .get('/jafa/api/foods')
                 .query({shop: "anything"})

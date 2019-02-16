@@ -20,13 +20,12 @@ async function getDatabaseObject() {
     }
 
     let url = "mongodb://" + credentials + host + ":" + mongoPort + "/" + mongoName;
-    console.log(url);
+    console.log("Database url: " + url);
 
     let client = await MongoClient.connect(url);
     let db = await client.db(mongoName);
     console.log("Connection to DB '" + mongoName + "' succesfull");
     return db;
 }
-
 
 module.exports = getDatabaseObject();

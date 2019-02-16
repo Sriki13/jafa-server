@@ -22,8 +22,7 @@ async function createComment(id, comment, author, model) {
         objectToComment.comments = [];
     }
     objectToComment.comments.push(comment);
-    let response = await model.update(objectToComment);
-    return response;
+    return await model.update(objectToComment);
 }
 
 async function getFoodComments(foodId) {

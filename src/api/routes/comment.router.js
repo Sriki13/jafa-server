@@ -3,11 +3,11 @@ const HttpStatus = require("http-status-codes");
 
 
 function sendNotFoodFoundIdResponse(res, id) {
-    return res.status(HttpStatus.BAD_REQUEST).send("No food found for " + id + " id")
+    return res.status(HttpStatus.BAD_REQUEST).send("No food found for " + id + " id");
 }
 
 function sendNotRecipeFoundIdResponse(res, id) {
-    return res.status(HttpStatus.BAD_REQUEST).send("No recipe found for " + id + " id")
+    return res.status(HttpStatus.BAD_REQUEST).send("No recipe found for " + id + " id");
 }
 
 function sendOKResponse(res, object) {
@@ -20,13 +20,10 @@ function sendOKResponse(res, object) {
  *
  * @apiParam (URL parameters) {Number} id The id of the food
  *
- * @apiParam (Comment) {Number} id The id of the comment
- * @apiParam (Comment) {String} author The name of the commenter
- * @apiParam (Comment) {String} message The content of the comment
- * @apiParam (Comment) {Date} timestamp The date of the comment
+ * @apiParam {String} message The content of the comment
  */
 async function addFoodComment(req, res) {
-    if (req.body.message === undefined || req.body.message === null) {
+    if (req.body.message == null) {
         return res.status(HttpStatus.BAD_REQUEST).send("message undefined");
     }
 
@@ -40,13 +37,10 @@ async function addFoodComment(req, res) {
  *
  * @apiParam (URL parameters) {Number} id The id of the recipe
  *
- * @apiParam (Comment) {Number} id The id of the comment
- * @apiParam (Comment) {String} author The name of the commenter
- * @apiParam (Comment) {String} message The content of the comment
- * @apiParam (Comment) {Date} timestamp The date of the comment
+ * @apiParam {String} message The content of the comment
  */
 async function addRecipeComment(req, res) {
-    if (req.body.message === undefined || req.body.message === null) {
+    if (req.body.message == null) {
         return res.status(HttpStatus.BAD_REQUEST).send("message undefined");
     }
 

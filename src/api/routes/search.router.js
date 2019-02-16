@@ -116,7 +116,7 @@ async function searchRecipe(req, res) {
         search = req.query.name;
     }
     if ((req.query.page != null && !isNaN(req.query.page) && req.query.page < 1)
-        || isNaN(req.query.page)) {
+        || req.query.page != null && isNaN(req.query.page)) {
         return res.status(HttpStatus.BAD_REQUEST).send("Page must be a number greater or equal to 1");
     }
     if (req.query.page == null) {
