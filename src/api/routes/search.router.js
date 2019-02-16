@@ -1,6 +1,5 @@
 const controller = require("../domain/search.controller");
 const HttpStatus = require("http-status-codes");
-const ObjectId = require('mongodb').ObjectID;
 
 /**
  * @api {get} jafa/api/foods Search foods

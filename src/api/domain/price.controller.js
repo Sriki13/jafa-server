@@ -7,7 +7,7 @@ const ObjectId = require('mongodb').ObjectID;
 // noinspection JSUnusedLocalSymbols
 async function generateAllPrices() {
     const collectionStore = await storeModel.getCollection();
-    const collectionFood= await foodModel.getCollection();
+    const collectionFood = await foodModel.getCollection();
 
     const allStores = await collectionStore.find({}).toArray();
     const allFoods = await collectionFood.find({});
@@ -49,7 +49,7 @@ async function getFoodById(foodId) {
     const collection = await foodModel.getCollection();
     let food = await collection.findOne({_id: foodId});
     if (food == null) {
-        throw exceptions.NoSuchFoodException(foodId);
+        throw new exceptions.NoSuchFoodException(foodId);
     }
     return food;
 }
