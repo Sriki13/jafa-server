@@ -47,10 +47,16 @@ async function insert(model, item) {
     await collection.save(item);
 }
 
+async function find(model, id) {
+    let collection = await model.getCollection();
+    return await collection.findOne({"_id": id});
+}
+
 module.exports = {
     setupApp,
     cleanCollections,
     setupTestUser,
     insert,
+    find,
     sleep
 };
