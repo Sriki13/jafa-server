@@ -49,7 +49,7 @@ describe('price.router.js', function () {
     };
     const foodWithoutPrice = {_id: foodWithoutPriceId, product_name: "whatever", prices: []};
 
-    describe("GET jafa/api/foods/:id/price", () => {
+    describe("GET foods/:id/price", () => {
 
         it("should 404 if the food does not exist", async () => {
             await request.agent(app.server)
@@ -76,7 +76,7 @@ describe('price.router.js', function () {
 
     });
 
-    describe("POST jafa/api/foods/:id/price", () => {
+    describe("POST foods/:id/price", () => {
 
         it("should 401 without a token", async () => {
             await request.agent(app.server)

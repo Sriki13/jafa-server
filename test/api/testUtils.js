@@ -52,5 +52,6 @@ module.exports = {
     cleanCollections,
     setupTestUser,
     insert,
-    sleep
+    sleep,
+    testUser
 };

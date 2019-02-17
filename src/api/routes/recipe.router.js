@@ -51,7 +51,7 @@ async function createRecipe(req, res) {
 }
 
 /**
- * @api {post} jafa/api/recipes/:id Edit recipe ingredient
+ * @api {post} jafa/api/recipes/:id/ingredients Edit recipe ingredient
  * @apiGroup recipe
  *
  * @apiParam (URL parameters) {String} id The id of the recipe
