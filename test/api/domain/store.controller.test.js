@@ -5,7 +5,7 @@ const TestUtils = require('../testUtils');
 const ObjectId = require('mongodb').ObjectID;
 
 
-describe('comment.controller.js', function () {
+describe('store.controller.js', function () {
 
     this.timeout(20000);
 
@@ -14,7 +14,7 @@ describe('comment.controller.js', function () {
     });
 
 
-    describe('sotre.controller.getStore', function () {
+    describe('store.controller.getStore', function () {
 
         it('should return store corresponding to id', async function () {
             let store = {name: 'test'};
@@ -31,7 +31,7 @@ describe('comment.controller.js', function () {
     });
 
 
-    describe('sotre.controller.searchStore', function () {
+    describe('store.controller.searchStore', function () {
 
         it('should return the twenty first entries', async function () {
             for (let i = 0; i < 21; i++) {
@@ -95,7 +95,7 @@ describe('comment.controller.js', function () {
 
     });
 
-    describe('sotre.controller.getAllRegions', function () {
+    describe('store.controller.getAllRegions', function () {
 
         it('should return all different regions contain in all store', async function() {
             await StoreController.addStore(null, null, null, null, "region1");
