@@ -18,10 +18,10 @@ async function setupApp() {
 }
 
 async function cleanCollections(models) {
-    models.forEach(async function (model) {
-        let collection = await model.getCollection();
+    for (let i = 0; i < models.length; i++) {
+        let collection = await models[i].getCollection();
         await collection.remove({});
-    });
+    }
 }
 
 const testUser = {

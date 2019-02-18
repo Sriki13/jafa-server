@@ -22,11 +22,11 @@ describe('comment.controller.js', function () {
         it('should insert a comment in the recipe object and persist it', async function () {
             let recipe = {title: "tacos"};
             await TestUtils.insert(Recipe, recipe);
-            await CommentController.createRecipeComment(recipe._id, {message: "super test !"}, "test master");
+            await CommentController.createRecipeComment(recipe._id, {message: "super test !"}, {username:"test master"});
             recipe = await TestUtils.find(Recipe, recipe._id);
             assert.strictEqual(recipe.comments.length, 1);
             assert.strictEqual(recipe.comments[0].message, 'super test !');
-            assert.strictEqual(recipe.comments[0].author, 'test master');
+            assert.strictEqual(recipe.comments[0].author.username, 'test master');
             assert.notStrictEqual(recipe.comments[0].timestamp, null);
         });
     });
@@ -38,11 +38,11 @@ describe('comment.controller.js', function () {
         it('should insert a comment in the food object and persist it', async function () {
             let food = {_id: 42, product_name: "tacos"};
             await TestUtils.insert(Food, food);
-            await CommentController.createFoodComment(42, {message: "super test !"}, "test master");
+            await CommentController.createFoodComment(42, {message: "super test !"}, {username:"test master"});
             food = await TestUtils.find(Food, 42);
             assert.strictEqual(food.comments.length, 1);
             assert.strictEqual(food.comments[0].message, 'super test !');
-            assert.strictEqual(food.comments[0].author, 'test master');
+            assert.strictEqual(food.comments[0].author.username, 'test master');
             assert.notStrictEqual(food.comments[0].timestamp, null);
         });
 
@@ -53,8 +53,8 @@ describe('comment.controller.js', function () {
         it('should return list of comments for a specific recipe id', async function() {
             let recipe = {title: "tacos"};
             await TestUtils.insert(Recipe, recipe);
-            await CommentController.createRecipeComment(recipe._id, {message: "super test !"}, "test master");
-            await CommentController.createRecipeComment(recipe._id, {message: "super test !"}, "test master");
+            await CommentController.createRecipeComment(recipe._id, {message: "super test !"}, {username:"test master"});
+            await CommentController.createRecipeComment(recipe._id, {message: "super test !"}, {username:"test master"});
             let comments = await CommentController.getRecipeComments(recipe._id);
             assert.strictEqual(comments.length, 2);
         });
@@ -76,8 +76,8 @@ describe('comment.controller.js', function () {
         it('should return list of comments for a specific recipe id', async function() {
             let food = {_id: 42, product_name: "tacos"};
             await TestUtils.insert(Food, food);
-            await CommentController.createFoodComment(42, {message: "super test !"}, "test master");
-            await CommentController.createFoodComment(42, {message: "super test !"}, "test master");
+            await CommentController.createFoodComment(42, {message: "super test !"}, {username:"test master"});
+            await CommentController.createFoodComment(42, {message: "super test !"}, {username:"test master"});
             let comments = await CommentController.getFoodComments(42);
             assert.strictEqual(comments.length, 2);
         });
