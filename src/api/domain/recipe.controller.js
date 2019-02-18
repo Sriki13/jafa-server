@@ -74,12 +74,14 @@ async function updateRecipeIngredient(userId, recipeId, position, foodId) {
     if (recipe.authorId.toString() !== userId) {
         throw new exceptions.InvalidUserException("User is not the author of the recipe");
     }
-    let food = await collection.findOne({_id: foodId});
+    let foodCollection = await foodModel.getCollection();
+    let food = await foodCollection.findOne({_id: foodId});
     if (food == null) {
         throw new exceptions.NoSuchFoodException(foodId);
     }
     recipe.ingredients[position].foodId = foodId;
-    await collection.save(recipe);
+    let recipeCollection = await recipeModel.getCollection();
+    await recipeCollection.save(recipe);
 }
 
 async function getRecipePrice(recipeId) {

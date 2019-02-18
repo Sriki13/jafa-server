@@ -37,14 +37,13 @@ async function setupTestUser(user) {
     if (user == null)
         user = testUser;
     let userCollection = await User.getCollection();
-    await userCollection.remove({});
-    await userCollection.insert(user);
+    await userCollection.save(user);
     return jwt.sign({sub: user._id}, config.secret);
 }
 
 async function insert(model, item) {
     let collection = await model.getCollection();
-    await collection.save(item);
+    return await collection.save(item);
 }
 
 async function find(model, id) {

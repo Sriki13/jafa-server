@@ -15,12 +15,12 @@ describe('recipe.router.js', function () {
 
     before(async () => {
         await testUtils.setupApp();
+        await testUtils.cleanCollections([User]);
         token = await testUtils.setupTestUser();
     });
 
     after(async () => {
         await app.stop();
-        await testUtils.cleanCollections([User]);
     });
 
     beforeEach(async () => {
@@ -78,7 +78,7 @@ describe('recipe.router.js', function () {
         };
 
         const otherUser = {
-            _id: ObjectId(2),
+            _id: ObjectId("5c685327dd01e7252c4b3fa5"),
             username: "ja",
             firstName: "ja",
             lastName: "puskaric",
@@ -103,6 +103,27 @@ describe('recipe.router.js', function () {
                 .send({position: 0, foodId: testFoodId})
                 .expect(400);
         });
+
+        it("should 400 if the food does not exist", async () => {
+            await testUtils.insert(Recipe, testRecipe);
+            await request.agent(app.server)
+                .post("/jafa/api/recipes/" + testRecipeId + "/ingredients")
+                .set('Authorization', 'bearer ' + token)
+                .send({position: 0, foodId: "lol"})
+                .expect(400);
+        });
+
+        it("should 200 and update the ingredient", async () => {
+            await testUtils.insert(Recipe, testRecipe);
+            await testUtils.insert(Food, testFood);
+            await request.agent(app.server)
+                .post("/jafa/api/recipes/" + testRecipeId + "/ingredients")
+                .set('Authorization', 'bearer ' + token)
+                .send({position: 0, foodId: testFoodId})
+                .expect(200, "");
+            let recipe = await testUtils.find(Recipe, testRecipe._id);
+            assert.strictEqual(recipe.ingredients[0].foodId, testFoodId);
+        })
 
     });
 

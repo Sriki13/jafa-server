@@ -44,7 +44,7 @@ describe('price.router.js', function () {
     const foodWithPrice = {
         _id: foodWithPriceId,
         product_name: "whatever",
-        prices: [{price: 12, storeId: testStoreId}],
+        prices: [{price: 19, storeId: testStoreId}],
         price: 19
     };
     const foodWithoutPrice = {_id: foodWithoutPriceId, product_name: "whatever", prices: []};

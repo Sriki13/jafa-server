@@ -36,7 +36,7 @@ function getAverageScore(food) {
 async function getScore(id) {
     let food = await findFood(id);
     await checkIfScoreIsDefined(food);
-    return getAverageScore(food);
+    return food.score;
 }
 
 async function setAllSCore() {
