@@ -16,7 +16,7 @@ async function createComment(id, comment, author, model) {
     if (!objectToComment) {
         return null;
     }
-    comment.author = author;
+    comment.author = { username: author.username };
     comment.timestamp = (new Date).getTime();
     if (objectToComment.comments == null) {
         objectToComment.comments = [];
