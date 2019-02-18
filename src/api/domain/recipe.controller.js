@@ -59,6 +59,9 @@ async function suggestFoods(ingredients) {
 
 async function findRecipe(id) {
     const collection = await recipeModel.getCollection();
+    if (!ObjectId.isValid(id)) {
+        throw new exceptions.InvalidRecipe(id);
+    }
     let recipe = await collection.findOne({_id: ObjectId(id)});
     if (recipe == null) {
         throw new exceptions.InvalidRecipe(id);

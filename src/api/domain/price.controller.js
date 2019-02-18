@@ -71,9 +71,9 @@ async function getPrices(foodId) {
 async function addPrice(foodId, storeId, price) {
     let food = await getFoodById(foodId);
     const collection = await storeModel.getCollection();
-    let store = collection.findOne({_id: storeId});
+    let store = await collection.findOne({_id: ObjectId(storeId)});
     if (store == null) {
-        throw exceptions.NoSuchStore(storeId);
+        throw new exceptions.NoSuchStore(storeId);
     }
     for (let i = 0; i < food.prices.length; i++) {
         let item = food.prices[i];

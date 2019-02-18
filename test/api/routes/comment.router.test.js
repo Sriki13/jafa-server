@@ -4,6 +4,7 @@ const assert = require('assert');
 
 const Food = require('../../../src/api/domain/models/food');
 const Recipe = require('../../../src/api/domain/models/recipe');
+const User = require('../../../src/api/domain/models/user');
 const app = require('../../../src/app');
 const testUtils = require("./../testUtils");
 
@@ -14,7 +15,6 @@ describe('comment.router.js', function () {
 
     before(async () => {
         await testUtils.setupApp();
-        token = await testUtils.setupTestUser();
     });
 
     after(async () => {
@@ -22,7 +22,8 @@ describe('comment.router.js', function () {
     });
 
     beforeEach(async () => {
-        await testUtils.cleanCollections([Food, Recipe]);
+        await testUtils.cleanCollections([Food, Recipe, User]);
+        token = await testUtils.setupTestUser();
     });
 
     const testFoodId = "testFoodId";

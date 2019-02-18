@@ -4,7 +4,6 @@ const ObjectId = require('mongodb').ObjectID;
 const jwt = require('jsonwebtoken');
 
 const User = require('../../src/api/domain/models/user');
-const Food = require('../../src/api/domain/models/food');
 
 function sleep(ms) {
     return new Promise(resolve => {
