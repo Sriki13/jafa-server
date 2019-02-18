@@ -27,7 +27,7 @@ function formatPrice(food, shop) {
         return food.price;
     }
     for (let price of food.prices) {
-        if (price.storeId === ObjectId(shop)) {
+        if (price.storeId.toString() === shop.toString()) {
             return price.price;
         }
     }
