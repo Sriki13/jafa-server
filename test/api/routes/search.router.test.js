@@ -87,7 +87,7 @@ describe('search.router.js', function () {
             return {
                 _id: 1, product_name: "tacos one meal", "prices": [
                     {
-                        "price": 16.55602801531245,
+                        "price": 16.55,
                         "storeId": ObjectId(storeId)
                     }
                 ]
@@ -133,7 +133,8 @@ describe('search.router.js', function () {
                     data: [{
                         "id": 1,
                         "images": [],
-                        "name": "tacos one meal"
+                        "name": "tacos one meal",
+                        price: 16.55
                     }],
                     count: 1
                 });

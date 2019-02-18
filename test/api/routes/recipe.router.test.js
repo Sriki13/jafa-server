@@ -28,7 +28,7 @@ describe('recipe.router.js', function () {
 
     const testFoodId = "salut";
     const testFoodName = " whatever";
-    const testFood = {_id: testFoodId, product_name: testFoodName};
+    const testFood = {_id: testFoodId, product_name: testFoodName, prices: [{price: 20}]};
 
     describe("POST /recipes", () => {
 
@@ -122,7 +122,7 @@ describe('recipe.router.js', function () {
                 .expect(200, "");
             let recipe = await testUtils.find(Recipe, testRecipe._id);
             assert.strictEqual(recipe.ingredients[0].foodId, testFoodId);
-        })
+        });
 
     });
 
@@ -134,6 +134,15 @@ describe('recipe.router.js', function () {
                 .expect(404);
         });
 
-    })
+        it("should return the sum of the price of the ingredients", async () => {
+            testRecipe.ingredients = [{foodId: testFoodId}];
+            await testUtils.insert(Recipe, testRecipe);
+            await testUtils.insert(Food, testFood);
+            await request.agent(app.server)
+                .get("/jafa/api/recipes/" + testRecipeId + "/price")
+                .expect(200, {sum: 20, unknown: []});
+        });
+
+    });
 
 });

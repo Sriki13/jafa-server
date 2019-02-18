@@ -20,7 +20,7 @@ async function fetchScore(req, res) {
         return res.status(HttpStatus.OK).send({score: score});
     } catch (e) {
         if (e instanceof exceptions.NoSuchFoodException) {
-            return res.status(HttpStatus.BAD_REQUEST).send(e.message);
+            return res.status(HttpStatus.NOT_FOUND).send(e.message);
         }
         return res.status(HttpStatus.BAD_REQUEST).send(e);
     }
@@ -47,7 +47,7 @@ async function createScore(req, res) {
         return res.status(HttpStatus.OK).send();
     } catch (e) {
         if (e instanceof exceptions.NoSuchFoodException) {
-            return res.status(HttpStatus.BAD_REQUEST).send(e.message);
+            return res.status(HttpStatus.NOT_FOUND).send(e.message);
         }
         return res.status(HttpStatus.BAD_REQUEST).send(e);
     }
