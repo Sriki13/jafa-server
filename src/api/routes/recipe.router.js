@@ -39,7 +39,8 @@ async function createRecipe(req, res) {
     }
     let userId = req.decoded_user._id;
     try {
-        let recipe = await controller.parseRecipe(req.body.recipeText, userId);
+        let recipe = await controller.parseRecipe(req.body.recipeText, userId,
+            req.decoded_user.username);
         let suggestions = await controller.suggestFoods(recipe.ingredients);
         return res.status(HttpStatus.OK).send({
             recipe: recipe,

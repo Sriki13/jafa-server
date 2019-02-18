@@ -4,7 +4,7 @@ const exceptions = require("./exceptions");
 const search = require("./search.controller");
 const ObjectId = require('mongodb').ObjectID;
 
-async function parseRecipe(recipeText, authorId) {
+async function parseRecipe(recipeText, authorId, authorName) {
     recipeText = recipeText.trim();
     const spLines = recipeText.split("\n");
     if (spLines === null || spLines.length < 3) {
@@ -17,6 +17,7 @@ async function parseRecipe(recipeText, authorId) {
     let recipe = {
         title: spLines[0],
         authorId: authorId,
+        authorName: authorName,
         ingredients: [],
         comments: [],
         date: new Date()
