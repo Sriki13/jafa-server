@@ -77,7 +77,7 @@ async function fetchFood(name, limit, criteria, order, page, shop, region) {
         }
         query.prices = {$elemMatch: {storeId: ObjectId(shop)}};
     }
-    if (region != null) {
+    if (region != null && region !== "") {
         let stores = await storeCollection.find({region: region}).toArray();
         if (stores.length === 0) {
             throw new exceptions.InvalidRegion(region);

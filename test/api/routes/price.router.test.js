@@ -4,6 +4,7 @@ const assert = require('assert');
 
 const Food = require('../../../src/api/domain/models/food');
 const Store = require('../../../src/api/domain/models/store');
+const User = require('../../../src/api/domain/models/user');
 const app = require('../../../src/app');
 const testUtils = require("./../testUtils");
 
@@ -14,18 +15,15 @@ describe('price.router.js', function () {
 
     before(async () => {
         await testUtils.setupApp();
-        token = await testUtils.setupTestUser();
-        await testUtils.cleanCollections([Store]);
-        await testUtils.insert(Store, testStore);
     });
 
     after(async () => {
-        await testUtils.cleanCollections([Store]);
         await app.stop();
     });
 
     beforeEach(async () => {
-        await testUtils.cleanCollections([Food]);
+        await testUtils.cleanCollections([Food, Store, User]);
+        token = await testUtils.setupTestUser();
     });
 
     const testStoreStringId = "5c59baab0a8ddf0016bfbb3d";
@@ -58,6 +56,7 @@ describe('price.router.js', function () {
         });
 
         it("should return the price of a food if it already exists", async () => {
+            await testUtils.insert(Store, testStore);
             await testUtils.insert(Food, foodWithPrice);
             let res = await request.agent(app.server)
                 .get("/jafa/api/foods/" + foodWithPriceId + "/price")
@@ -68,6 +67,7 @@ describe('price.router.js', function () {
         });
 
         it("should return an empty array without prices", async () => {
+            await testUtils.insert(Store, testStore);
             await testUtils.insert(Food, foodWithoutPrice);
             await request.agent(app.server)
                 .get("/jafa/api/foods/" + foodWithoutPriceId + "/price")
@@ -103,6 +103,7 @@ describe('price.router.js', function () {
         });
 
         it("should 400 if missing params", async () => {
+            await testUtils.insert(Store, testStore);
             await testUtils.insert(Food, foodWithoutPrice);
             await request.agent(app.server)
                 .post("/jafa/api/foods/" + foodWithoutPriceId + "/price")
@@ -122,6 +123,7 @@ describe('price.router.js', function () {
         });
 
         it("should add the new price", async () => {
+            await testUtils.insert(Store, testStore);
             await testUtils.insert(Food, foodWithoutPrice);
             await request.agent(app.server)
                 .post("/jafa/api/foods/" + foodWithoutPriceId + "/price")

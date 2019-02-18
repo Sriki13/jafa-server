@@ -15,8 +15,6 @@ describe('recipe.router.js', function () {
 
     before(async () => {
         await testUtils.setupApp();
-        await testUtils.cleanCollections([User]);
-        token = await testUtils.setupTestUser();
     });
 
     after(async () => {
@@ -24,7 +22,8 @@ describe('recipe.router.js', function () {
     });
 
     beforeEach(async () => {
-        await testUtils.cleanCollections([Food, Recipe]);
+        await testUtils.cleanCollections([Food, Recipe, User]);
+        token = await testUtils.setupTestUser();
     });
 
     const testFoodId = "salut";
@@ -64,18 +63,18 @@ describe('recipe.router.js', function () {
 
     });
 
-    describe("POST /recipes/:id", async () => {
+    const testRecipeId = "5c68532a2d01e7252c4b3fa5";
+    const testRecipe = {
+        _id: ObjectId(testRecipeId),
+        title: "titre",
+        authorId: testUtils.testUser._id,
+        ingredients: [{name: "whatever", quantity: "100", unit: ""}],
+        comments: [],
+        date: "2019-02-16T18:15:06.386Z",
+        text: "steps lol"
+    };
 
-        const testRecipeId = "5c68532a2d01e7252c4b3fa5";
-        const testRecipe = {
-            _id: ObjectId(testRecipeId),
-            title: "titre",
-            authorId: testUtils.testUser._id,
-            ingredients: [{name: "whatever", quantity: "100", unit: ""}],
-            comments: [],
-            date: "2019-02-16T18:15:06.386Z",
-            text: "steps lol"
-        };
+    describe("POST /recipes/:id", async () => {
 
         const otherUser = {
             _id: ObjectId("5c685327dd01e7252c4b3fa5"),
@@ -126,5 +125,15 @@ describe('recipe.router.js', function () {
         })
 
     });
+
+    describe("GET /recipes/:id/price", () => {
+
+        it("should 404 if the recipe does not exist", async () => {
+            await request.agent(app.server)
+                .get("/jafa/api/recipes/nope/price")
+                .expect(404);
+        });
+
+    })
 
 });
