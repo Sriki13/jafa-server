@@ -77,7 +77,7 @@ async function addPrice(foodId, storeId, price) {
     }
     for (let i = 0; i < food.prices.length; i++) {
         let item = food.prices[i];
-        if (item.storeId.toString() === storeId) {
+        if (item.storeId.toString() === storeId.toString()) {
             food.prices.splice(i, 1);
             break;
         }
