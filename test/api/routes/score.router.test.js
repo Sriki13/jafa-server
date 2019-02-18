@@ -1,9 +1,7 @@
 const request = require('supertest');
-const ObjectId = require('mongodb').ObjectID;
 const assert = require('assert');
 
 const Food = require('../../../src/api/domain/models/food');
-const Recipe = require('../../../src/api/domain/models/recipe');
 const User = require('../../../src/api/domain/models/user');
 const app = require('../../../src/app');
 const testUtils = require("./../testUtils");
@@ -24,7 +22,7 @@ describe('score.router.js', function () {
     });
 
     beforeEach(async () => {
-        await testUtils.cleanCollections([Food, Recipe]);
+        await testUtils.cleanCollections([Food]);
     });
 
     const testFoodId = "salut";

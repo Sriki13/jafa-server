@@ -16,6 +16,9 @@ const ObjectId = require('mongodb').ObjectID;
  * @apiSuccess {String} region The region of the store
  */
 async function fetchStore(req, res) {
+    if (!ObjectId.isValid(req.params.id)) {
+        return res.status(HttpStatus.NOT_FOUND).send();
+    }
     let store = await controller.getStore(ObjectId(req.params.id));
     if (store == null) {
         return res.status(HttpStatus.NOT_FOUND).send();
@@ -37,7 +40,7 @@ async function fetchStore(req, res) {
  * @apiSuccess {String} region The region of the store
  */
 async function fetchStores(req, res) {
-    let stores = await controller.searchStore(req.params.id);
+    let stores = await controller.searchStore();
     return res.status(HttpStatus.OK).send(stores);
 }
 
