@@ -6,7 +6,7 @@ const Store = require('../../../src/api/domain/models/store');
 const app = require('../../../src/app');
 const testUtils = require("./../testUtils");
 
-describe('score.router.js', function () {
+describe('store.router.js', function () {
 
     this.timeout(10000);
 

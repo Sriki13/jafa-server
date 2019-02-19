@@ -3,6 +3,7 @@
 
 
 const userService = require('../domain/users.controller');
+const HttpStatus = require("http-status-codes");
 
 
 module.exports = {
@@ -36,6 +37,9 @@ function authenticate(req, res, next) {
  * @apiParam (Body) {String} password The password of the user
  */
 function register(req, res, next) {
+    if (req.body.username == null || req.body.password == null) {
+        return res.status(HttpStatus.BAD_REQUEST).send("Missing username and/or password");
+    }
     req.body.date = Date.now();
     userService.create(req.body)
         .then(() => res.json({}))
@@ -51,10 +55,13 @@ function register(req, res, next) {
  * @apiParam (Body) {String} username The new username of the user
  * @apiParam (Body) {String} password The new password of the user
  */
-function update(req, res, next) {
-    userService.update(req.params.id, req.body)
-        .then(() => res.json({}))
-        .catch(err => next(err));
+async function update(req, res, next) {
+    try {
+        await userService.update(req.params.id, req.body);
+        return res.status(HttpStatus.OK).send();
+    } catch (e) {
+        next(e);
+    }
 }
 
 /**

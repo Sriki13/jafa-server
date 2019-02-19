@@ -53,7 +53,6 @@ async function create(userParam) {
 async function update(id, userParam) {
     const collection = await userModel.getCollection();
     const user = await collection.findOne({_id: ObjectId(id)});
-
     // validate
     if (!user) throw 'User not found';
     if (user.username !== userParam.username
@@ -70,8 +69,7 @@ async function update(id, userParam) {
 
     // copy userParam properties to user
     Object.assign(user, userParam);
-
-    await user.save();
+    await collection.save(user);
 }
 
 async function _delete(id) {
