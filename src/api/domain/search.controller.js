@@ -26,10 +26,14 @@ function formatPrice(food, shop) {
     if (shop == null) {
         return food.price;
     }
-    for (let price of food.prices) {
-        if (price.storeId.toString() === shop.toString()) {
-            return price.price;
+    if (Array.isArray(food.prices)) {
+        for (let price of food.prices) {
+            if (price.storeId.toString() === shop.toString()) {
+                return price.price;
+            }
         }
+    } else {
+        return food.prices.price;
     }
 }
 
@@ -86,7 +90,18 @@ async function fetchFood(name, limit, criteria, order, page, shop, region) {
         query.prices = {$elemMatch: {storeId: {$in: ids}}};
     }
     let count = await foodCollection.count(query);
-    let foods = await foodCollection.find(query, options).toArray();
+    let foods;
+    if (criteria === "price" && shop != null) {
+        foods = await foodCollection.aggregate([
+            {$match: query},
+            {$unwind: "$prices"},
+            {$sort: {prices: (order === null || order === "asc") ? 1 : -1}},
+            {$limit: options.limit},
+            {$skip: options.skip}
+        ]).toArray();
+    } else {
+        foods = await foodCollection.find(query, options).toArray();
+    }
     let result = [];
     foods.forEach(food => {
         result.push(formatFood(food, shop));
