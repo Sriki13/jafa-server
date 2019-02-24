@@ -26,7 +26,7 @@ https://github.com/fitzzzz/jafa-client
 * [Express](https://expressjs.com/fr/) for standard api setup
 * [MongoDB node driver](https://www.npmjs.com/package/mongodb/) for database access
 * [Apidoc](http://apidocjs.com/) for documentation
-* We followed this [tutorial](http://jasonwatmore.com/post/2018/06/14/nodejs-mongodb-simple-api-for-authentication-registration-and-user-management) to implements authentication. This tutorial uses the following libraries: 
+* We followed this [tutorial](http://jasonwatmore.com/post/2018/06/14/nodejs-mongodb-simple-api-for-authentication-registration-and-user-management) to implement authentication. This tutorial uses the following libraries: 
   * [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken)
   * [express-jwt](https://github.com/auth0/express-jwt)
 
