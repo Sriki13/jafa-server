@@ -8,12 +8,12 @@ Tokens can be acquired with valid credentials with the [user API](https://jafa-s
 ## Server deployment address and documentation on Heroku
 
 https://jafa-server.herokuapp.com/apidoc/
-(can also take up to 30 seconds to start)
+(can take up to 30 seconds to start)
 
 ## Client deployment address on Heroku
 
 https://jafa-polytech.herokuapp.com
-(can take up to 30 seconds to start)
+(can also take up to 30 seconds to start)
 
 ## Client code base address
 
