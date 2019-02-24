@@ -96,8 +96,8 @@ async function fetchFood(name, limit, criteria, order, page, shop, region) {
             {$match: query},
             {$unwind: "$prices"},
             {$sort: {prices: (order === null || order === "asc") ? 1 : -1}},
+            {$skip: options.skip},
             {$limit: options.limit},
-            {$skip: options.skip}
         ]).toArray();
     } else {
         foods = await foodCollection.find(query, options).toArray();
