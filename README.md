@@ -19,7 +19,7 @@ https://jafa-polytech.herokuapp.com
 
 https://github.com/fitzzzz/jafa-client
 
-# Libraries used :
+# Libraries used
 
 ## Main
 
