@@ -23,7 +23,7 @@ https://github.com/fitzzzz/jafa-client
 
 ## Main
 
-* [Express](https://expressjs.com/fr/) for Heroku Deployment
+* [Express](https://expressjs.com/fr/) for standard api setup
 * [MongoDB node driver](https://www.npmjs.com/package/mongodb/) for database access
 * [Apidoc](http://apidocjs.com/) for documentation
 * [JSON Web Tokens](https://jwt.io/) for authentication
